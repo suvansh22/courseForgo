@@ -1,0 +1,13 @@
+@reference "tailwindcss";
+
+.feedbackWrapper {
+  @apply flex h-full min-h-20 flex-col justify-between rounded-lg bg-white p-4 shadow-sm;
+}
+
+.nameWrapper {
+  @apply mt-3 text-xs font-medium text-gray-500;
+}
+
+.feedbackWrapper {
+  @apply text-sm text-gray-600;
+}

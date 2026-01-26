@@ -1,0 +1,45 @@
+@reference "tailwindcss";
+@keyframes strike {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animateStrike {
+  animation: strike 0.6s ease-out forwards;
+}
+
+.couseCardContainer {
+  @apply w-full max-w-sm rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md;
+}
+
+.imageContainer {
+  @apply relative h-44 w-full overflow-hidden rounded-t-xl bg-gray-100;
+}
+
+.contentContainer {
+  @apply flex flex-col gap-2 p-4;
+}
+
+.priceContainer {
+  @apply mt-auto flex items-center justify-between pt-3;
+}
+
+.priceWrapper {
+  @apply flex items-center gap-2;
+}
+
+.disctountedPriceAnimation {
+  @apply absolute left-0 top-1/2 h-0.5 w-full origin-left bg-gray-500;
+}
+
+.disctountedPriceWrapper {
+  @apply text-lg font-bold text-gray-900;
+}
+
+.titleWrapper {
+  @apply line-clamp-2 text-lg font-semibold text-gray-900;
+}
