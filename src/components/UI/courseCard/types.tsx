@@ -1,4 +1,5 @@
-type Props = {
+export type Props = {
+  id: string;
   title: string;
   description: string;
   originalPrice: number;

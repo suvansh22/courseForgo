@@ -1,17 +1,32 @@
+"use client";
+
 import Button from "antd/es/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 import styles from "./index.module.css";
+import type { Props } from "./types";
 
 const CourseCard: FC<Props> = ({
+  id,
   description,
   discountedPrice,
   originalPrice,
   thumbnailUrl,
   title,
 }) => {
+  const router = useRouter();
+  const handleNavigate = () => {
+    router.push(`/course/${id}`);
+  };
+
   return (
-    <div className={styles.couseCardContainer}>
+    <div
+      className={styles.couseCardContainer}
+      role="link"
+      tabIndex={0}
+      aria-label={`View course ${title}`}
+    >
       {/* Thumbnail */}
       <div className={styles.imageContainer}>
         <Image
@@ -46,7 +61,15 @@ const CourseCard: FC<Props> = ({
             ) : null}
           </div>
 
-          <Button type="primary">View Course</Button>
+          <Button
+            type="primary"
+            onClick={(event) => {
+              event.stopPropagation();
+              handleNavigate();
+            }}
+          >
+            View Course
+          </Button>
         </div>
       </div>
     </div>
