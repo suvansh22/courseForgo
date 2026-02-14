@@ -1,29 +1,12 @@
 "use client";
 
 import Button from "antd/es/button";
-import { useEffect, useMemo, useState } from "react";
 import CartCard from "@/components/UI/cartCard";
-import { CartItem, getCartItems, removeFromCart } from "@/lib/cart";
+import { useCart } from "@/components/providers/cartProvider";
 import styles from "./index.module.css";
 
 const CartPage = () => {
-  const [items, setItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    setItems(getCartItems());
-  }, []);
-
-  const total = useMemo(() => {
-    return items.reduce((sum, item) => {
-      const price = item.discountedPrice ?? item.originalPrice;
-      return sum + price * item.quantity;
-    }, 0);
-  }, [items]);
-
-  const handleRemove = (id: string) => {
-    removeFromCart(id);
-    setItems(getCartItems());
-  };
+  const { items, total, removeItem } = useCart();
 
   return (
     <div className={styles.page}>
@@ -42,15 +25,14 @@ const CartPage = () => {
             </div>
           ) : (
             items.map((item) => (
-              <CartCard
-                key={item.id}
-                title={item.title}
-                thumbnailUrl={item.thumbnailUrl}
-                originalPrice={item.originalPrice}
-                discountedPrice={item.discountedPrice}
-                quantity={item.quantity}
-                onRemove={() => handleRemove(item.id)}
-              />
+                <CartCard
+                  key={item.id}
+                  title={item.title}
+                  thumbnailUrl={item.thumbnailUrl}
+                  originalPrice={item.originalPrice}
+                  discountedPrice={item.discountedPrice}
+                  onRemove={() => removeItem(item.id)}
+                />
             ))
           )}
         </section>

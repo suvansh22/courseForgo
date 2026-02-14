@@ -1,3 +1,4 @@
+import { DeleteOutlined } from "@ant-design/icons";
 import Button from "antd/es/button";
 import Image from "next/image";
 import styles from "./index.module.css";
@@ -7,7 +8,6 @@ type Props = {
   thumbnailUrl?: string;
   originalPrice: number;
   discountedPrice?: number;
-  quantity: number;
   onRemove: () => void;
 };
 
@@ -16,7 +16,6 @@ const CartCard = ({
   thumbnailUrl,
   originalPrice,
   discountedPrice,
-  quantity,
   onRemove,
 }: Props) => {
   const price = discountedPrice ?? originalPrice;
@@ -29,22 +28,26 @@ const CartCard = ({
           alt={title}
           fill
           className={styles.image}
-          sizes="96px"
         />
       </div>
 
       <div className={styles.details}>
         <div className={styles.headerRow}>
           <h3 className={styles.title}>{title}</h3>
-          <span className={styles.price}>
-            {"\u20B9"}
-            {price}
-          </span>
+          <div className={styles.metaRow}>
+            <span className={styles.price}>
+              {"\u20B9"}
+              {price}
+            </span>
+            <Button
+              type="default"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={onRemove}
+              aria-label="Remove item"
+            />
+          </div>
         </div>
-        <p className={styles.quantity}>Qty: {quantity}</p>
-        <Button type="default" danger onClick={onRemove}>
-          Remove
-        </Button>
       </div>
     </article>
   );

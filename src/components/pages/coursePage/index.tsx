@@ -1,11 +1,11 @@
 "use client";
 
 import { courseCardsMock } from "@/components/mockData";
-import { addToCart } from "@/lib/cart";
+import { useCart } from "@/components/providers/cartProvider";
 import Button from "antd/es/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo } from "react";
 import styles from "./index.module.css";
 
 type Course = {
@@ -23,19 +23,19 @@ const fallbackCourse: Course = {
 };
 
 const CoursePage: FC<{ course?: Course }> = ({ course }) => {
-  const [inCart, setInCart] = useState(false);
   const router = useRouter();
+  const { addItem, isInCart } = useCart();
   const data = useMemo(() => course ?? fallbackCourse, [course]);
+  const inCart = isInCart(data.id);
 
   const handleAddToCart = () => {
-    addToCart({
+    addItem({
       id: data.id,
       title: data.title,
       originalPrice: data.originalPrice,
       discountedPrice: data.discountedPrice,
       thumbnailUrl: data.thumbnailUrl,
     });
-    setInCart(true);
   };
 
   return (

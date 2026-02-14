@@ -1,5 +1,7 @@
 "use client";
+import { useCart } from "@/components/providers/cartProvider";
 import { LogoutOutlined, ShoppingCartOutlined } from "@ant-design/icons/";
+import Badge from "antd/es/badge/Badge";
 import Button from "antd/es/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,7 +9,7 @@ import styles from "./index.module.css";
 
 const Header = () => {
   const router = useRouter();
-
+  const { items } = useCart();
   const handleLogoClick = () => {
     router.push("/");
   };
@@ -32,13 +34,15 @@ const Header = () => {
           />
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            type="primary"
-            shape="circle"
-            size="large"
-            icon={<ShoppingCartOutlined className="text-xl!" />}
-            onClick={handleCartClick}
-          />
+          <Badge count={items.length}>
+            <Button
+              type="primary"
+              shape="circle"
+              size="large"
+              icon={<ShoppingCartOutlined className="text-xl!" />}
+              onClick={handleCartClick}
+            />
+          </Badge>
           <Button
             type="primary"
             shape="circle"
