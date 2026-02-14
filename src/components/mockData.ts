@@ -6,6 +6,7 @@ const courseCardsMock = [
       "Build scalable and maintainable React applications using TypeScript, hooks, and modern best practices.",
     originalPrice: 1999,
     discountedPrice: 999,
+    thumbnailUrl: "/placeholder.jpg",
   },
   {
     id: "nextjs-full-stack-development",
@@ -14,6 +15,7 @@ const courseCardsMock = [
       "Learn Next.js App Router, server components, authentication, and API routes by building real projects.",
     originalPrice: 2499,
     discountedPrice: 1799,
+    thumbnailUrl: "/placeholder.jpg",
   },
   {
     id: "javascript-fundamentals",
@@ -21,6 +23,7 @@ const courseCardsMock = [
     description:
       "Understand JavaScript from the ground up — closures, promises, async/await, and how the JS engine works.",
     originalPrice: 1499,
+    thumbnailUrl: "/placeholder.jpg",
   },
   {
     id: "modern-css-responsive-design",
@@ -29,6 +32,7 @@ const courseCardsMock = [
       "Master Flexbox, Grid, and responsive layouts to build beautiful and accessible user interfaces.",
     originalPrice: 1299,
     discountedPrice: 899,
+    thumbnailUrl: "/placeholder.jpg",
   },
 ];
 
