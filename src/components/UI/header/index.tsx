@@ -1,21 +1,22 @@
 "use client";
-import { useCart } from "@/components/providers/cartProvider";
-import { LogoutOutlined, ShoppingCartOutlined } from "@ant-design/icons/";
-import Badge from "antd/es/badge/Badge";
+import { LogoutOutlined } from "@ant-design/icons/";
 import Button from "antd/es/button";
+import { signOut, useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
 
-const Header = () => {
+const CartButton = dynamic(() => import("./cartButton"));
+
+const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
+  const { status } = useSession();
   const router = useRouter();
-  const { items } = useCart();
   const handleLogoClick = () => {
     router.push("/");
   };
-
-  const handleCartClick = () => {
-    router.push("/cart");
+  const handleSignOut = () => {
+    signOut();
   };
 
   return (
@@ -34,21 +35,18 @@ const Header = () => {
           />
         </div>
         <div className="flex items-center gap-3">
-          <Badge count={items.length}>
-            <Button
-              type="primary"
-              shape="circle"
-              size="large"
-              icon={<ShoppingCartOutlined className="text-xl!" />}
-              onClick={handleCartClick}
-            />
-          </Badge>
-          <Button
-            type="primary"
-            shape="circle"
-            size="large"
-            icon={<LogoutOutlined className="text-xl!" />}
-          />
+          {status === "authenticated" ? (
+            <>
+              {isAdminApp ? null : <CartButton />}
+              <Button
+                type="primary"
+                shape="circle"
+                size="large"
+                onClick={handleSignOut}
+                icon={<LogoutOutlined className="text-xl!" />}
+              />
+            </>
+          ) : null}
         </div>
       </div>
     </header>

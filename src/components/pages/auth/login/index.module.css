@@ -1,0 +1,57 @@
+@reference "tailwindcss";
+
+.page {
+  @apply mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8;
+}
+
+.layout {
+  @apply grid items-center gap-10 lg:grid-cols-[minmax(0,_1.15fr)_minmax(0,_0.85fr)];
+}
+
+.hero {
+  @apply flex flex-col gap-4;
+}
+
+.eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.28em] text-emerald-600;
+}
+
+.title {
+  @apply text-3xl font-semibold text-gray-900 sm:text-4xl;
+}
+
+.subtitle {
+  @apply text-base text-gray-600;
+}
+
+.badges {
+  @apply flex flex-wrap gap-2;
+}
+
+.badge {
+  @apply rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700;
+}
+
+.card {
+  @apply flex flex-col gap-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8;
+}
+
+.cardHeader {
+  @apply flex items-center gap-4;
+}
+
+.cardTitle {
+  @apply text-lg font-semibold text-gray-900;
+}
+
+.cardSubtitle {
+  @apply text-sm text-gray-600;
+}
+
+.button {
+  @apply w-full;
+}
+
+.meta {
+  @apply text-xs text-gray-500;
+}

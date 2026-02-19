@@ -1,0 +1,17 @@
+@reference "tailwindcss";
+
+.page {
+  @apply mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8;
+}
+
+.header {
+  @apply flex flex-wrap items-center justify-between gap-4;
+}
+
+.kicker {
+  @apply text-xs font-semibold uppercase tracking-[0.2em] text-gray-400;
+}
+
+.title {
+  @apply text-2xl font-semibold text-gray-900 sm:text-3xl;
+}

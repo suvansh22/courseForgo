@@ -43,3 +43,51 @@
 .titleWrapper {
   @apply line-clamp-2 text-lg font-semibold text-gray-900;
 }
+
+.adminCard {
+  @apply flex cursor-pointer flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-gray-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20;
+}
+
+.adminCardActive {
+  @apply border-gray-900/40 ring-1 ring-gray-900/10;
+}
+
+.adminImageWrapper {
+  @apply relative h-40 w-full overflow-hidden rounded-xl bg-gray-100;
+}
+
+.adminImage {
+  @apply h-full w-full object-cover;
+}
+
+.adminInfo {
+  @apply flex w-full flex-1 flex-col gap-2;
+}
+
+.adminTitleRow {
+  @apply flex items-start justify-between gap-3;
+}
+
+.adminTitle {
+  @apply text-base font-semibold text-gray-900;
+}
+
+.adminPrice {
+  @apply text-base font-semibold text-gray-900;
+}
+
+.adminDescription {
+  @apply text-sm text-gray-600 line-clamp-2;
+}
+
+.adminMeta {
+  @apply flex flex-wrap gap-2 text-xs text-gray-500;
+}
+
+.adminMetaItem {
+  @apply rounded-full bg-gray-100 px-2 py-1;
+}
+
+.adminActions {
+  @apply flex flex-wrap gap-2 pt-2;
+}

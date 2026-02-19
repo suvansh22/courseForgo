@@ -1,0 +1,4 @@
+const TITLE_MAX = 80;
+const DESCRIPTION_MAX = 1000;
+
+export { DESCRIPTION_MAX, TITLE_MAX };

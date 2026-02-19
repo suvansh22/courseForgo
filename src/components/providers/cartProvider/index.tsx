@@ -54,7 +54,11 @@ const writeStorage = (items: CartItem[]) => {
 };
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>(readStorage());
+  const [items, setItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    setItems(readStorage());
+  }, []);
 
   useEffect(() => {
     writeStorage(items);
