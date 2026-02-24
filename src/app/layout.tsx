@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "The Serene Sedator",
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col bg-gray-50 text-gray-900 antialiased">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

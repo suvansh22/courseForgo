@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "the-serene-sedator",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-02-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "courseforgo-prod",
+      "database_id": "edb752dc-f8b6-4b8b-80ab-1ad3f5c08586",
+      "preview_database_id": "93d08430-5e35-4502-bd2f-8c9bfac646bc",
+      "migrations_dir": "drizzle",
+    },
+  ],
+}
