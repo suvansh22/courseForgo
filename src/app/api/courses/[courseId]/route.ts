@@ -1,6 +1,5 @@
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { deleteCourse, getCourseById, updateCourse } from "@/lib/data/courseStore";
-import { deletePdfAsset, updatePdfAsset } from "@/lib/data/pdfAssetStore";
 import {
   hasSession,
   invalidJson,
@@ -57,17 +56,13 @@ export const PUT = async (
       return invalidJson();
     }
 
-    const { errors, update, pdfAssetUpdate } = validateUpdateCourse(payload);
+    const { errors, update } = validateUpdateCourse(payload);
     if (errors) {
       return validationFailed(errors);
     }
 
     if (update?.id && update.id !== courseId) {
       return badRequest("Course id in body must match route param.");
-    }
-
-    if (pdfAssetUpdate && Object.keys(pdfAssetUpdate).length > 0) {
-      await updatePdfAsset(existing.pdfAssetId, pdfAssetUpdate);
     }
 
     const updated = await updateCourse(courseId, update ?? {});
@@ -95,8 +90,6 @@ export const DELETE = async (
     if (!deleted) {
       return notFound("Course not found.");
     }
-
-    await deletePdfAsset(deleted.pdfAssetId);
 
     return NextResponse.json<CourseResponse>({ course: deleted });
   } catch (error) {

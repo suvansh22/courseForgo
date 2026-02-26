@@ -62,7 +62,6 @@ const AdminCourseList = ({ courses, onEdit, onDelete }: Props) => {
               originalPrice={course.originalPrice}
               discountedPrice={course.discountedPrice}
               thumbnailUrl={course.thumbnailUrl}
-              pdfName={course.pdfName}
               onEdit={() => onEdit(course.id)}
               onDelete={() => onDelete(course.id)}
             />

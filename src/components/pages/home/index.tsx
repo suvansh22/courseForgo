@@ -1,5 +1,6 @@
 "use client";
 
+import { courseCardsMock } from "@/components/mockData";
 import CourseCard from "@/components/UI/courseCard";
 import { getCourses } from "@/lib/api/courses";
 import { useQuery } from "@tanstack/react-query";
@@ -24,7 +25,8 @@ const HomePage: FC = () => {
     );
   }
 
-  const courses = data?.courses ?? [];
+  // const courses = data?.courses ?? [];
+  const courses = courseCardsMock;
 
   return (
     <div className={styles.mainContainer}>

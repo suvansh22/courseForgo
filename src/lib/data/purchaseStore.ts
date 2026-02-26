@@ -9,6 +9,7 @@ const toPurchase = (row: PurchaseRow): Purchase => ({
   id: row.id,
   userId: row.userId,
   courseId: row.courseId,
+  accessType: row.accessType,
   purchasedAt: row.purchasedAt,
 });
 
@@ -42,6 +43,7 @@ export const createPurchase = async (input: Purchase): Promise<Purchase | null> 
     id: input.id,
     userId: input.userId,
     courseId: input.courseId,
+    accessType: input.accessType,
     purchasedAt: input.purchasedAt,
   });
 

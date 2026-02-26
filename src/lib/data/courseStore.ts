@@ -12,7 +12,7 @@ const toCourse = (row: CourseRow): Course => ({
   originalPrice: row.originalPrice,
   discountedPrice: row.discountedPrice ?? undefined,
   thumbnailUrl: row.thumbnailUrl ?? undefined,
-  pdfAssetId: row.pdfAssetId,
+  fileId: row.fileId,
   isActive: row.isActive,
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
@@ -54,7 +54,7 @@ export const createCourse = async (
     originalPrice: course.originalPrice,
     discountedPrice: course.discountedPrice ?? null,
     thumbnailUrl: course.thumbnailUrl ?? null,
-    pdfAssetId: course.pdfAssetId,
+    fileId: course.fileId,
     isActive: course.isActive,
     createdAt: course.createdAt,
     updatedAt: course.updatedAt,
@@ -79,7 +79,7 @@ export const updateCourse = async (
   if (input.originalPrice !== undefined) values.originalPrice = input.originalPrice;
   if (input.discountedPrice !== undefined) values.discountedPrice = input.discountedPrice ?? null;
   if (input.thumbnailUrl !== undefined) values.thumbnailUrl = input.thumbnailUrl ?? null;
-  if (input.pdfAssetId !== undefined) values.pdfAssetId = input.pdfAssetId;
+  if (input.fileId !== undefined) values.fileId = input.fileId;
   if (input.isActive !== undefined) values.isActive = input.isActive;
 
   if (Object.keys(values).length === 0) {

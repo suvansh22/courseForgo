@@ -3,7 +3,8 @@
 import Button from "antd/es/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { FC, MouseEvent } from "react";
+import CartButton from "./CartButton";
 import styles from "./index.module.css";
 import type { Props } from "./types";
 
@@ -16,71 +17,29 @@ const CourseCard: FC<Props> = (props) => {
     originalPrice,
     thumbnailUrl,
     title,
+    variant = "public",
+    onEdit = () => {},
+    onDelete = () => {},
   } = props;
 
-  if (props.variant === "admin") {
-    const { pdfName, onEdit, onDelete } = props;
-    return (
-      <article className={styles.adminCard} role="button" tabIndex={0}>
-        <div className={styles.adminImageWrapper}>
-          <Image
-            src={thumbnailUrl ?? "/placeholder.jpg"}
-            alt={title}
-            fill
-            className={styles.adminImage}
-            sizes="(max-width: 768px) 100vw, 240px"
-          />
-        </div>
-        <div className={styles.adminInfo}>
-          <div className={styles.adminTitleRow}>
-            <h3 className={styles.adminTitle}>{title}</h3>
-            <span className={styles.adminPrice}>
-              {"\u20B9"}
-              {discountedPrice ?? originalPrice}
-            </span>
-          </div>
-          <p className={styles.adminDescription}>{description}</p>
-          <div className={styles.adminMeta}>
-            <span className={styles.adminMetaItem}>
-              {"\u20B9"}
-              {originalPrice} list
-            </span>
-            {discountedPrice ? (
-              <span className={styles.adminMetaItem}>
-                {"\u20B9"}
-                {discountedPrice} discounted
-              </span>
-            ) : null}
-            {pdfName ? (
-              <span className={styles.adminMetaItem}>PDF: {pdfName}</span>
-            ) : (
-              <span className={styles.adminMetaItem}>PDF: none</span>
-            )}
-          </div>
-        </div>
-        <div className={styles.adminActions}>
-          <Button
-            type={"default"}
-            onClick={(event) => {
-              event.stopPropagation();
-              onEdit();
-            }}
-          >
-            Edit
-          </Button>
-          <Button
-            danger
-            onClick={(event) => {
-              event.stopPropagation();
-              onDelete();
-            }}
-          >
-            Remove
-          </Button>
-        </div>
-      </article>
-    );
-  }
+  const thumbnailSrc = thumbnailUrl ?? "/placeholder.jpg";
+  const truncatedDescription =
+    description.length > 500
+      ? `${description.slice(0, 500).trimEnd()}...`
+      : description;
+
+  const withStopPropagation =
+    (handler: () => void) => (event: MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      handler();
+    };
+
+  const renderPrice = (price: number) => (
+    <>
+      {"\u20B9"}
+      {price}
+    </>
+  );
 
   const handleNavigate = () => {
     if (props.onNavigate) {
@@ -97,10 +56,9 @@ const CourseCard: FC<Props> = (props) => {
       tabIndex={0}
       aria-label={`View course ${title}`}
     >
-      {/* Thumbnail */}
       <div className={styles.imageContainer}>
         <Image
-          src={thumbnailUrl ?? "/placeholder.jpg"}
+          src={thumbnailSrc}
           alt="Course thumbnail"
           className="h-full w-full object-cover"
           fill
@@ -108,16 +66,17 @@ const CourseCard: FC<Props> = (props) => {
         />
       </div>
 
-      {/* Content */}
       <div className={styles.contentContainer}>
         <h3 className={styles.titleWrapper}>{title}</h3>
 
-        <p className="line-clamp-2 text-sm text-gray-600">{description}</p>
+        <p className="line-clamp-2 text-sm text-gray-600">
+          {truncatedDescription}
+        </p>
 
         <div className={styles.priceContainer}>
           <div className={styles.priceWrapper}>
             <span className="relative text-sm text-gray-500">
-              ₹{originalPrice}
+              {renderPrice(originalPrice)}
               {discountedPrice ? (
                 <span
                   className={`${styles.disctountedPriceAnimation} ${styles.animateStrike}`}
@@ -126,20 +85,39 @@ const CourseCard: FC<Props> = (props) => {
             </span>
             {discountedPrice ? (
               <span className={styles.disctountedPriceWrapper}>
-                ₹{discountedPrice}
+                {renderPrice(discountedPrice)}
               </span>
             ) : null}
           </div>
 
-          <Button
-            type="primary"
-            onClick={(event) => {
-              event.stopPropagation();
-              handleNavigate();
-            }}
-          >
-            View Course
-          </Button>
+          <div className={styles.cardActions}>
+            {variant === "admin" ? (
+              <>
+                <Button type={"default"} onClick={withStopPropagation(onEdit)}>
+                  Edit
+                </Button>
+                <Button danger onClick={withStopPropagation(onDelete)}>
+                  Remove
+                </Button>
+              </>
+            ) : (
+              <>
+                <CartButton
+                  id={id}
+                  originalPrice={originalPrice}
+                  title={title}
+                  discountedPrice={discountedPrice}
+                  thumbnailUrl={thumbnailUrl}
+                />
+                <Button
+                  type="primary"
+                  onClick={withStopPropagation(handleNavigate)}
+                >
+                  View Course
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

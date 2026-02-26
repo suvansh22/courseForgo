@@ -5,19 +5,6 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS pdf_assets (
-  id TEXT PRIMARY KEY,
-  storage_key TEXT NOT NULL UNIQUE,
-  original_name TEXT NOT NULL,
-  size_bytes INTEGER NOT NULL,
-  mime_type TEXT NOT NULL,
-  checksum TEXT,
-  pages INTEGER,
-  uploaded_by_user_id TEXT NOT NULL,
-  uploaded_at TEXT NOT NULL,
-  FOREIGN KEY (uploaded_by_user_id) REFERENCES users(id) ON DELETE RESTRICT
-);
-
 CREATE TABLE IF NOT EXISTS courses (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
@@ -25,24 +12,25 @@ CREATE TABLE IF NOT EXISTS courses (
   original_price INTEGER NOT NULL,
   discounted_price INTEGER,
   thumbnail_url TEXT,
-  pdf_asset_id TEXT NOT NULL,
+  file_id TEXT NOT NULL,
   is_active INTEGER NOT NULL DEFAULT 1,
   created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  FOREIGN KEY (pdf_asset_id) REFERENCES pdf_assets(id) ON DELETE RESTRICT
+  updated_at TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS purchases (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
   course_id TEXT NOT NULL,
+  access_type TEXT NOT NULL DEFAULT 'read_only',
   purchased_at TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT,
+  CHECK (access_type IN ('read_only', 'can_download')),
   UNIQUE (user_id, course_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_courses_active ON courses(is_active);
-CREATE INDEX IF NOT EXISTS idx_courses_pdf_asset_id ON courses(pdf_asset_id);
+CREATE INDEX IF NOT EXISTS idx_courses_file_id ON courses(file_id);
 CREATE INDEX IF NOT EXISTS idx_purchases_user_id ON purchases(user_id);
 CREATE INDEX IF NOT EXISTS idx_purchases_course_id ON purchases(course_id);

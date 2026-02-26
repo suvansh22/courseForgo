@@ -34,7 +34,7 @@ const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
             height={100}
           />
         </div>
-        <div className="flex items-center gap-3">
+        <div className={styles.actions}>
           {status === "authenticated" ? (
             <>
               {isAdminApp ? null : <CartButton />}

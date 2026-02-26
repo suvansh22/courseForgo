@@ -5,7 +5,7 @@ export type Course = {
   originalPrice: number;
   discountedPrice?: number;
   thumbnailUrl?: string;
-  pdfAssetId: string;
+  fileId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
