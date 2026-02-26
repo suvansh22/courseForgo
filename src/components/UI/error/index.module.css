@@ -1,0 +1,15 @@
+.errorContainer {
+  @apply flex flex-col items-center justify-center gap-6 rounded-lg border border-red-300 bg-red-50 p-8 dark:border-red-800 dark:bg-red-900/20;
+}
+
+.errorIcon {
+  @apply text-5xl text-red-500;
+}
+
+.errorMessage {
+  @apply text-center text-lg text-red-700 dark:text-red-300;
+}
+
+.retryButton {
+  @apply px-6 py-2;
+}

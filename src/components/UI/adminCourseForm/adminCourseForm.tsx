@@ -6,7 +6,7 @@ import { toSlug } from "@/components/utils/toSlug";
 import Button from "antd/es/button";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
-import { ChangeEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import styles from "./adminCourseForm.module.css";
 
 export type CourseFormValues = {
@@ -17,6 +17,7 @@ export type CourseFormValues = {
   discountedPrice?: number;
   thumbnailUrl?: string;
   pdfName?: string;
+  file_id?: string;
 };
 
 type Props = {
@@ -40,7 +41,9 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
   const [thumbnailUrl, setThumbnailUrl] = useState(
     editingCourse?.thumbnailUrl ?? "",
   );
-  const [pdfName, setPdfName] = useState(editingCourse?.pdfName ?? "");
+  const [fileId, setFileId] = useState(
+    editingCourse?.file_id ?? editingCourse?.pdfName ?? "",
+  );
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [touched, setTouched] = useState({
     title: false,
@@ -48,7 +51,7 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
     originalPrice: false,
     discountedPrice: false,
     thumbnailUrl: false,
-    pdfName: false,
+    fileId: false,
   });
 
   const id = useMemo(
@@ -58,36 +61,30 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
 
   const validation = useMemo(() => {
     const errors: Record<string, string> = {};
-    const trimmedTitle = title.trim();
-    const trimmedDescription = description.trim();
     const priceValue = Number(originalPrice);
     const discountValue = discountedPrice ? Number(discountedPrice) : undefined;
 
-    if (!trimmedTitle) {
+    // Title: required
+    if (!title.trim()) {
       errors.title = "Title is required.";
-    } else if (trimmedTitle.length > TITLE_MAX) {
-      errors.title = `Title must be ${TITLE_MAX} characters or fewer.`;
     }
 
-    if (!trimmedDescription) {
+    // Description: required
+    if (!description.trim()) {
       errors.description = "Description is required.";
-    } else if (trimmedDescription.length > DESCRIPTION_MAX) {
-      errors.description = `Description must be ${DESCRIPTION_MAX} characters or fewer.`;
     }
 
+    // Price: required, only number
     if (!originalPrice.trim()) {
       errors.originalPrice = "Price is required.";
     } else if (!Number.isFinite(priceValue)) {
       errors.originalPrice = "Price must be a valid number.";
-    } else if (priceValue <= 0) {
-      errors.originalPrice = "Price must be greater than 0.";
     }
 
+    // Discount price: optional, only number, must be less than original price
     if (discountedPrice.trim()) {
       if (!Number.isFinite(discountValue)) {
         errors.discountedPrice = "Discount must be a valid number.";
-      } else if ((discountValue ?? 0) < 0) {
-        errors.discountedPrice = "Discount cannot be negative.";
       } else if (
         Number.isFinite(priceValue) &&
         (discountValue ?? 0) >= priceValue
@@ -96,48 +93,23 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
       }
     }
 
-    if (thumbnailUrl.trim()) {
-      try {
-        const parsedUrl = new URL(thumbnailUrl.trim());
-        if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
-          errors.thumbnailUrl =
-            "Image URL must start with http:// or https://.";
-        }
-      } catch {
-        errors.thumbnailUrl = "Image URL must be a valid URL.";
-      }
-    }
-
-    if (pdfName && !pdfName.toLowerCase().endsWith(".pdf")) {
-      errors.pdfName = "Course PDF must be a .pdf file.";
+    // Google Drive file_id: required
+    if (!fileId.trim()) {
+      errors.fileId = "Google Drive file id is required.";
     }
 
     return {
       errors,
       isValid: Object.keys(errors).length === 0,
     };
-  }, [
-    title,
-    description,
-    originalPrice,
-    discountedPrice,
-    thumbnailUrl,
-    pdfName,
-  ]);
+  }, [title, description, originalPrice, discountedPrice, fileId]);
 
   const markTouched = (field: keyof typeof touched) => {
     setTouched((prev) => (prev[field] ? prev : { ...prev, [field]: true }));
   };
 
   const shouldShowError = (field: keyof typeof touched) =>
-    hasSubmitted || touched[field];
-
-  const handlePdfChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setPdfName(file.name);
-    }
-  };
+    (hasSubmitted || touched[field]) && !!validation.errors[field];
 
   const handleSave = () => {
     setHasSubmitted(true);
@@ -157,7 +129,7 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
       originalPrice: price,
       discountedPrice: discount,
       thumbnailUrl: thumbnailUrl.trim() || undefined,
-      pdfName: pdfName || undefined,
+      file_id: fileId.trim(),
     });
   };
 
@@ -175,9 +147,9 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
             maxLength={TITLE_MAX}
             showCount
           />
-          {shouldShowError("title") && validation.errors.title ? (
+          {shouldShowError("title") && (
             <span className={styles.error}>{validation.errors.title}</span>
-          ) : null}
+          )}
         </label>
         <label className={styles.field}>
           <span className={styles.label}>Slug</span>
@@ -197,9 +169,9 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
           maxLength={DESCRIPTION_MAX}
           showCount
         />
-        {shouldShowError("description") && validation.errors.description ? (
+        {shouldShowError("description") && (
           <span className={styles.error}>{validation.errors.description}</span>
-        ) : null}
+        )}
       </label>
 
       <div className={styles.grid}>
@@ -213,12 +185,11 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
             onBlur={() => markTouched("originalPrice")}
             status={shouldShowError("originalPrice") ? "error" : undefined}
           />
-          {shouldShowError("originalPrice") &&
-          validation.errors.originalPrice ? (
+          {shouldShowError("originalPrice") && (
             <span className={styles.error}>
               {validation.errors.originalPrice}
             </span>
-          ) : null}
+          )}
         </label>
         <label className={styles.field}>
           <span className={styles.label}>Discount Price (optional)</span>
@@ -230,12 +201,11 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
             onBlur={() => markTouched("discountedPrice")}
             status={shouldShowError("discountedPrice") ? "error" : undefined}
           />
-          {shouldShowError("discountedPrice") &&
-          validation.errors.discountedPrice ? (
+          {shouldShowError("discountedPrice") && (
             <span className={styles.error}>
               {validation.errors.discountedPrice}
             </span>
-          ) : null}
+          )}
         </label>
       </div>
 
@@ -249,25 +219,24 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
             onBlur={() => markTouched("thumbnailUrl")}
             status={shouldShowError("thumbnailUrl") ? "error" : undefined}
           />
-          {shouldShowError("thumbnailUrl") && validation.errors.thumbnailUrl ? (
+          {shouldShowError("thumbnailUrl") && (
             <span className={styles.error}>
               {validation.errors.thumbnailUrl}
             </span>
-          ) : null}
+          )}
         </label>
         <label className={styles.field}>
-          <span className={styles.label}>Course PDF (optional)</span>
+          <span className={styles.label}>Google Drive file id</span>
           <Input
-            type="file"
-            accept="application/pdf"
-            onChange={handlePdfChange}
-            onBlur={() => markTouched("pdfName")}
-            status={shouldShowError("pdfName") ? "error" : undefined}
+            placeholder="e.g. 1AbCdEfGhIJkLmNoPqRsTuVwXyZ"
+            value={fileId}
+            onChange={(event) => setFileId(event.target.value)}
+            onBlur={() => markTouched("fileId")}
+            status={shouldShowError("fileId") ? "error" : undefined}
           />
-          {pdfName ? <span className={styles.helper}>{pdfName}</span> : null}
-          {shouldShowError("pdfName") && validation.errors.pdfName ? (
-            <span className={styles.error}>{validation.errors.pdfName}</span>
-          ) : null}
+          {shouldShowError("fileId") && (
+            <span className={styles.error}>{validation.errors.fileId}</span>
+          )}
         </label>
       </div>
 

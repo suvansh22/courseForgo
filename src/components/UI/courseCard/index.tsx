@@ -19,21 +19,9 @@ const CourseCard: FC<Props> = (props) => {
   } = props;
 
   if (props.variant === "admin") {
-    const { isActive, pdfName, onSelect, onEdit, onDelete } = props;
+    const { pdfName, onEdit, onDelete } = props;
     return (
-      <article
-        className={`${styles.adminCard} ${isActive ? styles.adminCardActive : ""}`}
-        onClick={onSelect}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            onSelect();
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-pressed={isActive}
-      >
+      <article className={styles.adminCard} role="button" tabIndex={0}>
         <div className={styles.adminImageWrapper}>
           <Image
             src={thumbnailUrl ?? "/placeholder.jpg"}
@@ -72,13 +60,13 @@ const CourseCard: FC<Props> = (props) => {
         </div>
         <div className={styles.adminActions}>
           <Button
-            type={isActive ? "primary" : "default"}
+            type={"default"}
             onClick={(event) => {
               event.stopPropagation();
               onEdit();
             }}
           >
-            {isActive ? "Editing" : "Open"}
+            Edit
           </Button>
           <Button
             danger

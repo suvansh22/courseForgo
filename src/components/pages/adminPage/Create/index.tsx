@@ -3,22 +3,23 @@
 import AdminCourseForm, {
   CourseFormValues,
 } from "@/components/UI/adminCourseForm/adminCourseForm";
+import LoadingOverlay from "@/components/UI/loadingOverlay";
 import { useAdminCourses } from "@/components/providers/adminCoursesProvider";
 import { useSnackbar } from "@/components/providers/snackbarProvider";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import styles from "./page.module.css";
 
-const AdminCourseCreatePageComponent = () => {
+const AdminCourseCreateContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showSnackbar } = useSnackbar();
-  const { courses, getCourseById, addCourse, updateCourse } = useAdminCourses();
+  const { getCourseById, addCourse, updateCourse } = useAdminCourses();
   const courseId = searchParams.get("courseId");
 
   const editingCourse = useMemo(
     () => (courseId ? (getCourseById(courseId) ?? null) : null),
-    [courseId, getCourseById, courses],
+    [courseId, getCourseById],
   );
 
   const handleSave = (values: CourseFormValues) => {
@@ -28,7 +29,6 @@ const AdminCourseCreatePageComponent = () => {
         content: "Course updated.",
         key: "course-save",
       });
-      router.push(`/admin/courses?selected=${courseId}`);
       return;
     }
 
@@ -70,6 +70,14 @@ const AdminCourseCreatePageComponent = () => {
         onCancel={handleCancel}
       />
     </div>
+  );
+};
+
+const AdminCourseCreatePageComponent = () => {
+  return (
+    <Suspense fallback={<LoadingOverlay isVisible />}>
+      <AdminCourseCreateContent />
+    </Suspense>
   );
 };
 

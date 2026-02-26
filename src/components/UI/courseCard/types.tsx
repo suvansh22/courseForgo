@@ -14,9 +14,7 @@ type PublicProps = BaseProps & {
 
 type AdminProps = BaseProps & {
   variant: "admin";
-  isActive: boolean;
   pdfName?: string;
-  onSelect: () => void;
   onEdit: () => void;
   onDelete: () => void;
 };

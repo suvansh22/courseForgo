@@ -2,13 +2,11 @@
 
 import AdminCourseList from "@/components/UI/adminCourseList/adminCourseList";
 import { useAdminCourses } from "@/components/providers/adminCoursesProvider";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 const AdminCoursesPageComponent = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const selectedId = searchParams.get("selected");
   const { courses, deleteCourse } = useAdminCourses();
 
   const handleEdit = (courseId: string) => {
@@ -29,8 +27,6 @@ const AdminCoursesPageComponent = () => {
 
       <AdminCourseList
         courses={courses}
-        selectedId={selectedId}
-        onSelect={handleEdit}
         onEdit={handleEdit}
         onDelete={deleteCourse}
       />

@@ -1,8 +1,8 @@
 "use client";
 
+import CourseCard from "@/components/UI/courseCard";
 import Input from "antd/es/input";
 import { useMemo, useState } from "react";
-import CourseCard from "@/components/UI/courseCard";
 import styles from "./adminCourseList.module.css";
 
 type Course = {
@@ -17,19 +17,11 @@ type Course = {
 
 type Props = {
   courses: Course[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 };
 
-const AdminCourseList = ({
-  courses,
-  selectedId,
-  onSelect,
-  onEdit,
-  onDelete,
-}: Props) => {
+const AdminCourseList = ({ courses, onEdit, onDelete }: Props) => {
   const [query, setQuery] = useState("");
 
   const filteredCourses = useMemo(() => {
@@ -71,8 +63,6 @@ const AdminCourseList = ({
               discountedPrice={course.discountedPrice}
               thumbnailUrl={course.thumbnailUrl}
               pdfName={course.pdfName}
-              isActive={selectedId === course.id}
-              onSelect={() => onSelect(course.id)}
               onEdit={() => onEdit(course.id)}
               onDelete={() => onDelete(course.id)}
             />
