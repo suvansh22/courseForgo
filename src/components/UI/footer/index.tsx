@@ -10,10 +10,10 @@ const Footer = () => {
         <div className={styles.footerRows}>
           <div className={styles.quickLinksContainer}>
             <h4 className={styles.headingWrapper}>Quick Links</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <ul className={styles.linksList}>
               {quickLinks.map((link, key) => (
                 <li key={key}>
-                  <a href={link.href} className="hover:text-gray-900">
+                  <a href={link.href} className={styles.linkItem}>
                     {link.name}
                   </a>
                 </li>
@@ -28,7 +28,7 @@ const Footer = () => {
           </div>
         </div>
         <div className={styles.allRightsReservedContainer}>
-          © {new Date().getFullYear()} CourseForgo. All rights reserved.
+          (c) {new Date().getFullYear()} CourseForgo. All rights reserved.
         </div>
       </div>
     </footer>

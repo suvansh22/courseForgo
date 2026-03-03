@@ -1,6 +1,7 @@
 "use client";
 import { LogoutOutlined } from "@ant-design/icons/";
 import Button from "antd/es/button";
+import Modal from "antd/es/modal";
 import { signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -16,7 +17,14 @@ const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
     router.push("/");
   };
   const handleSignOut = () => {
-    signOut();
+    Modal.confirm({
+      title: "Log out?",
+      content: "You will need to sign in again to continue.",
+      okText: "Log out",
+      cancelText: "Cancel",
+      okButtonProps: { danger: true },
+      onOk: () => signOut(),
+    });
   };
 
   return (
