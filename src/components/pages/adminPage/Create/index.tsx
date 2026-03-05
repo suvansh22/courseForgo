@@ -36,10 +36,13 @@ const AdminCourseCreateContent = () => {
       id: values.id,
       title: values.title,
       description: values.description,
-      originalPrice: values.originalPrice,
-      discountedPrice: values.discountedPrice,
+      readPrice: values.readPrice,
+      readDiscountedPrice: values.readDiscountedPrice,
+      downloadPrice: values.downloadPrice,
+      downloadDiscountedPrice: values.downloadDiscountedPrice,
       thumbnailUrl: values.thumbnailUrl,
       pdfName: values.pdfName,
+      file_id: values.file_id,
     });
     showSnackbar("success", {
       content: "Course created.",

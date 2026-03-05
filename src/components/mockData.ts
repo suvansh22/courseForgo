@@ -4,8 +4,10 @@ const courseCardsMock = [
     title: "Master React & TypeScript",
     description:
       "Build scalable and maintainable React applications using TypeScript, hooks, and modern best practices.",
-    originalPrice: 1999,
-    discountedPrice: 999,
+    readPrice: 1999,
+    readDiscountedPrice: 999,
+    downloadPrice: 2999,
+    downloadDiscountedPrice: 1499,
     thumbnailUrl: "/placeholder.jpg",
   },
   {
@@ -13,8 +15,10 @@ const courseCardsMock = [
     title: "Next.js Full Stack Development",
     description:
       "Learn Next.js App Router, server components, authentication, and API routes by building real projects.",
-    originalPrice: 2499,
-    discountedPrice: 1799,
+    readPrice: 1999,
+    readDiscountedPrice: 999,
+    downloadPrice: 2999,
+    downloadDiscountedPrice: 1499,
     thumbnailUrl: "/placeholder.jpg",
   },
   {
@@ -22,7 +26,8 @@ const courseCardsMock = [
     title: "JavaScript Fundamentals",
     description:
       "Understand JavaScript from the ground up — closures, promises, async/await, and how the JS engine works.",
-    originalPrice: 1499,
+    readPrice: 1999,
+    downloadPrice: 2999,
     thumbnailUrl: "/placeholder.jpg",
   },
   {
@@ -30,8 +35,10 @@ const courseCardsMock = [
     title: "Modern CSS & Responsive Design",
     description:
       "Master Flexbox, Grid, and responsive layouts to build beautiful and accessible user interfaces.",
-    originalPrice: 1299,
-    discountedPrice: 899,
+    readPrice: 1999,
+    readDiscountedPrice: 999,
+    downloadPrice: 2999,
+    downloadDiscountedPrice: 1499,
     thumbnailUrl: "/placeholder.jpg",
   },
 ];

@@ -1,4 +1,5 @@
 import { useCart } from "@/components/providers/cartProvider";
+import { ACCESS_TYPE } from "@/types/purchase";
 import Button from "antd/es/button";
 import { useRouter } from "next/navigation";
 import { FC, MouseEvent } from "react";
@@ -9,6 +10,7 @@ type Props = {
   originalPrice: number;
   discountedPrice?: number;
   thumbnailUrl?: string;
+  accessType: ACCESS_TYPE;
 };
 
 const CartButton: FC<Props> = ({
@@ -17,6 +19,7 @@ const CartButton: FC<Props> = ({
   originalPrice,
   discountedPrice,
   thumbnailUrl,
+  accessType,
 }) => {
   const router = useRouter();
   const { addItem, isInCart } = useCart();
@@ -25,7 +28,7 @@ const CartButton: FC<Props> = ({
       event.stopPropagation();
       handler();
     };
-  const inCart = isInCart(id);
+  const inCart = isInCart({ id, accessType });
 
   const handleAddToCart = () => {
     if (inCart) {
@@ -38,6 +41,7 @@ const CartButton: FC<Props> = ({
       originalPrice,
       discountedPrice,
       thumbnailUrl,
+      accessType,
     });
   };
   return (

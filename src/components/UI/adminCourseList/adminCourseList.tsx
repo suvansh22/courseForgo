@@ -9,8 +9,10 @@ type Course = {
   id: string;
   title: string;
   description: string;
-  originalPrice: number;
-  discountedPrice?: number;
+  readPrice: number;
+  readDiscountedPrice?: number;
+  downloadPrice: number;
+  downloadDiscountedPrice?: number;
   thumbnailUrl?: string;
   pdfName?: string;
 };
@@ -59,8 +61,10 @@ const AdminCourseList = ({ courses, onEdit, onDelete }: Props) => {
               id={course.id}
               title={course.title}
               description={course.description}
-              originalPrice={course.originalPrice}
-              discountedPrice={course.discountedPrice}
+              readPrice={course.readPrice}
+              readDiscountedPrice={course.readDiscountedPrice}
+              downloadPrice={course.downloadPrice}
+              downloadDiscountedPrice={course.downloadDiscountedPrice}
               thumbnailUrl={course.thumbnailUrl}
               onEdit={() => onEdit(course.id)}
               onDelete={() => onDelete(course.id)}

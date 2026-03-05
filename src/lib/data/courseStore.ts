@@ -1,6 +1,10 @@
 import { getDb } from "@/lib/db/d1";
 import { courses } from "@/lib/db/schema";
-import type { Course, CreateCourseInput, UpdateCourseInput } from "@/types/course";
+import type {
+  Course,
+  CreateCourseInput,
+  UpdateCourseInput,
+} from "@/types/course";
 import { desc, eq } from "drizzle-orm";
 
 type CourseRow = typeof courses.$inferSelect;
@@ -9,8 +13,10 @@ const toCourse = (row: CourseRow): Course => ({
   id: row.id,
   title: row.title,
   description: row.description,
-  originalPrice: row.originalPrice,
-  discountedPrice: row.discountedPrice ?? undefined,
+  readPrice: row.readPrice,
+  readDiscountedPrice: row.readDiscountedPrice ?? undefined,
+  downloadPrice: row.downloadPrice,
+  downloadDiscountedPrice: row.downloadDiscountedPrice ?? undefined,
   thumbnailUrl: row.thumbnailUrl ?? undefined,
   fileId: row.fileId,
   isActive: row.isActive,
@@ -20,13 +26,20 @@ const toCourse = (row: CourseRow): Course => ({
 
 export const listCourses = async (): Promise<Course[]> => {
   const db = getDb();
-  const result = await db.select().from(courses).orderBy(desc(courses.createdAt));
+  const result = await db
+    .select()
+    .from(courses)
+    .orderBy(desc(courses.createdAt));
   return result.map(toCourse);
 };
 
 export const getCourseById = async (id: string): Promise<Course | null> => {
   const db = getDb();
-  const [row] = await db.select().from(courses).where(eq(courses.id, id)).limit(1);
+  const [row] = await db
+    .select()
+    .from(courses)
+    .where(eq(courses.id, id))
+    .limit(1);
   return row ? toCourse(row) : null;
 };
 
@@ -51,8 +64,10 @@ export const createCourse = async (
     id: course.id,
     title: course.title,
     description: course.description,
-    originalPrice: course.originalPrice,
-    discountedPrice: course.discountedPrice ?? null,
+    readPrice: course.readPrice,
+    readDiscountedPrice: course.readDiscountedPrice ?? null,
+    downloadPrice: course.downloadPrice,
+    downloadDiscountedPrice: course.downloadDiscountedPrice ?? null,
     thumbnailUrl: course.thumbnailUrl ?? null,
     fileId: course.fileId,
     isActive: course.isActive,
@@ -76,9 +91,17 @@ export const updateCourse = async (
 
   if (input.title !== undefined) values.title = input.title;
   if (input.description !== undefined) values.description = input.description;
-  if (input.originalPrice !== undefined) values.originalPrice = input.originalPrice;
-  if (input.discountedPrice !== undefined) values.discountedPrice = input.discountedPrice ?? null;
-  if (input.thumbnailUrl !== undefined) values.thumbnailUrl = input.thumbnailUrl ?? null;
+  if (input.readPrice !== undefined) values.readPrice = input.readPrice;
+  if (input.readDiscountedPrice !== undefined) {
+    values.readDiscountedPrice = input.readDiscountedPrice ?? null;
+  }
+  if (input.downloadPrice !== undefined)
+    values.downloadPrice = input.downloadPrice;
+  if (input.downloadDiscountedPrice !== undefined) {
+    values.downloadDiscountedPrice = input.downloadDiscountedPrice ?? null;
+  }
+  if (input.thumbnailUrl !== undefined)
+    values.thumbnailUrl = input.thumbnailUrl ?? null;
   if (input.fileId !== undefined) values.fileId = input.fileId;
   if (input.isActive !== undefined) values.isActive = input.isActive;
 

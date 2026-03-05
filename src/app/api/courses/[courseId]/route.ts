@@ -1,20 +1,29 @@
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { deleteCourse, getCourseById, updateCourse } from "@/lib/data/courseStore";
 import {
+  deleteCourse,
+  getCourseById,
+  updateCourse,
+} from "@/lib/data/courseStore";
+import { getPurchaseByUserAndCourseId } from "@/lib/data/purchaseStore";
+import {
+  badRequest,
   hasSession,
   invalidJson,
   notFound,
   serverError,
-  validationFailed,
-  badRequest,
   unauthorized,
+  validationFailed,
 } from "@/lib/http/apiErrors";
-import type { CourseResponse } from "@/types/course";
 import { validateUpdateCourse } from "@/lib/validation/course";
+import type {
+  CourseResponse,
+  CourseWithPurchaseInfoResponse,
+} from "@/types/course";
 import { NextResponse } from "next/server";
+import { isAdminQueryFalse } from "../route";
 
 export const GET = async (
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ courseId: string }> },
 ) => {
   try {
@@ -26,6 +35,23 @@ export const GET = async (
     const course = await getCourseById(courseId);
     if (!course) {
       return notFound("Course not found.");
+    }
+
+    if (isAdminQueryFalse(request)) {
+      const purchase = await getPurchaseByUserAndCourseId(
+        session.user.id,
+        courseId,
+      );
+      return NextResponse.json<CourseWithPurchaseInfoResponse>({
+        course: {
+          ...course,
+          purchaseInfo: {
+            hasPurchased: Boolean(purchase),
+            accessType: purchase?.accessType,
+            purchasedAt: purchase?.purchasedAt,
+          },
+        },
+      });
     }
 
     return NextResponse.json<CourseResponse>({ course });

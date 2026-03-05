@@ -14,10 +14,13 @@ type AdminCourse = {
   id: string;
   title: string;
   description: string;
-  originalPrice: number;
-  discountedPrice?: number;
+  readPrice: number;
+  readDiscountedPrice?: number;
+  downloadPrice: number;
+  downloadDiscountedPrice?: number;
   thumbnailUrl?: string;
   pdfName?: string;
+  file_id?: string;
 };
 
 type AdminCoursesContextValue = {
@@ -28,15 +31,19 @@ type AdminCoursesContextValue = {
   deleteCourse: (id: string) => void;
 };
 
-const AdminCoursesContext = createContext<AdminCoursesContextValue | null>(null);
+const AdminCoursesContext = createContext<AdminCoursesContextValue | null>(
+  null,
+);
 
 const toAdminCourses = (): AdminCourse[] =>
   courseCardsMock.map((course) => ({
     id: course.id,
     title: course.title,
     description: course.description,
-    originalPrice: course.originalPrice,
-    discountedPrice: course.discountedPrice,
+    readPrice: course.readPrice,
+    readDiscountedPrice: course.readDiscountedPrice,
+    downloadPrice: course.downloadPrice,
+    downloadDiscountedPrice: course.downloadDiscountedPrice,
     thumbnailUrl: course.thumbnailUrl,
   }));
 
@@ -83,7 +90,9 @@ export const AdminCoursesProvider = ({ children }: { children: ReactNode }) => {
 export const useAdminCourses = () => {
   const context = useContext(AdminCoursesContext);
   if (!context) {
-    throw new Error("useAdminCourses must be used within AdminCoursesProvider.");
+    throw new Error(
+      "useAdminCourses must be used within AdminCoursesProvider.",
+    );
   }
   return context;
 };

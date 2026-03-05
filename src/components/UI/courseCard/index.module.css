@@ -13,7 +13,7 @@
 }
 
 .couseCardContainer {
-  @apply w-full max-w-sm rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md;
+  @apply w-full max-w-sm rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md cursor-pointer;
 }
 
 .imageContainer {
@@ -25,7 +25,7 @@
 }
 
 .priceContainer {
-  @apply mt-auto flex items-center justify-between pt-3;
+  @apply mt-auto flex flex-col items-center justify-between pt-3;
 }
 
 .cardActions {
@@ -41,9 +41,21 @@
 }
 
 .disctountedPriceWrapper {
-  @apply text-lg font-bold text-gray-900;
+  @apply font-bold text-gray-900;
 }
 
 .titleWrapper {
   @apply line-clamp-2 text-lg font-semibold text-gray-900;
+}
+
+.viewButton {
+  @apply z-10 right-1 top-1 absolute gap-1 flex;
+}
+
+.smallTitle {
+  @apply text-xs;
+}
+
+.pricesWrapper {
+  @apply flex w-full justify-between text-gray-500 font-bold;
 }

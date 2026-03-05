@@ -27,6 +27,10 @@ const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
     });
   };
 
+  const createNewCourse = () => {
+    router.push("/admin/create");
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerWrapper}>
@@ -46,6 +50,11 @@ const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
           {status === "authenticated" ? (
             <>
               {isAdminApp ? null : <CartButton />}
+              {isAdminApp ? (
+                <Button onClick={createNewCourse} type="primary" size="large">
+                  New Course
+                </Button>
+              ) : null}
               <Button
                 type="primary"
                 shape="circle"

@@ -2,8 +2,10 @@ export type Props = {
   id: string;
   title: string;
   description: string;
-  originalPrice: number;
-  discountedPrice?: number;
+  readPrice: number;
+  readDiscountedPrice?: number;
+  downloadPrice: number;
+  downloadDiscountedPrice?: number;
   thumbnailUrl?: string;
   variant?: "public" | "admin";
   onEdit?: () => void;

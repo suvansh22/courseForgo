@@ -2,17 +2,15 @@
 
 import { courseCardsMock } from "@/components/mockData";
 import CoursePage from "@/components/pages/coursePage";
+import { Course } from "@/types/course";
 import { use } from "react";
 
 export default function CourseByIdPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ courseId: string }>;
 }) {
-  const { slug } = use(params);
-  const courseId = slug;
-  const course =
-    courseCardsMock.find((item) => item.id === courseId) ?? undefined;
-
+  const { courseId } = use(params);
+  const course = courseCardsMock.find((item) => item.id === courseId) as Course;
   return <CoursePage course={course} />;
 }

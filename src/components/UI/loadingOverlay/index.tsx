@@ -3,16 +3,22 @@ import { Spin } from "antd";
 
 type LoadingOverlayProps = {
   isVisible: boolean;
+  scope?: "screen" | "container";
 };
 
-const LoadingOverlay = ({ isVisible }: LoadingOverlayProps) => {
+const LoadingOverlay = ({
+  isVisible,
+  scope = "screen",
+}: LoadingOverlayProps) => {
   if (!isVisible) {
     return null;
   }
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-black/40 backdrop-blur-sm"
+      className={`${
+        scope === "container" ? "absolute w-full h-full" : "fixed"
+      } inset-0 z-50 grid place-items-center bg-black/40 backdrop-blur-sm`}
       role="status"
       aria-live="polite"
       aria-busy="true"

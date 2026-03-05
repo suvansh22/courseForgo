@@ -1,5 +1,6 @@
 "use client";
 
+import { ACCESS_TYPE } from "@/types/purchase";
 import {
   createContext,
   useCallback,
@@ -15,6 +16,7 @@ export type CartItem = {
   originalPrice: number;
   discountedPrice?: number;
   thumbnailUrl?: string;
+  accessType: ACCESS_TYPE;
 };
 
 type CartContextValue = {
@@ -23,7 +25,7 @@ type CartContextValue = {
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
-  isInCart: (id: string) => boolean;
+  isInCart: ({ id, accessType }: { id: string; accessType: string }) => boolean;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -66,7 +68,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addItem = (item: CartItem) => {
     setItems((prev) => {
-      const exists = prev.some((cartItem) => cartItem.id === item.id);
+      const exists = prev.some(
+        (cartItem) =>
+          cartItem.id === item.id && cartItem.accessType === item.accessType,
+      );
       return exists ? prev : [...prev, item];
     });
   };
@@ -87,7 +92,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, [items]);
 
   const isInCart = useCallback(
-    (id: string) => items.some((item) => item.id === id),
+    ({ id, accessType }: { id: string; accessType: string }) =>
+      items.some((item) => item.id === id && item.accessType === accessType),
     [items],
   );
 
@@ -102,7 +108,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }),
     [isInCart, items, total],
   );
-
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 

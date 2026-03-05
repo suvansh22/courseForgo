@@ -2,6 +2,7 @@
 
 import { courseCardsMock } from "@/components/mockData";
 import CourseCard from "@/components/UI/courseCard";
+import LoadingOverlay from "@/components/UI/loadingOverlay";
 import { getCourses } from "@/lib/api/courses";
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
@@ -14,7 +15,11 @@ const HomePage: FC = () => {
   });
 
   if (isLoading) {
-    return <div className={styles.mainContainer}>Loading courses...</div>;
+    return (
+      <div className={`flex-1 relative`}>
+        <LoadingOverlay isVisible scope="container" />
+      </div>
+    );
   }
 
   if (isError) {

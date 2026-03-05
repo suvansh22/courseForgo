@@ -15,7 +15,7 @@ const AdminCoursesPageComponent = () => {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
+      <div className={styles.header}>
         <div>
           <p className={styles.kicker}>Admin</p>
           <h1 className={styles.title}>Courses</h1>
@@ -23,7 +23,7 @@ const AdminCoursesPageComponent = () => {
         <p className={styles.subtitle}>
           Manage your catalog and open any course to edit.
         </p>
-      </header>
+      </div>
 
       <AdminCourseList
         courses={courses}

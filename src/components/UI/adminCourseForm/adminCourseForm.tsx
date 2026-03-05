@@ -13,8 +13,10 @@ export type CourseFormValues = {
   id: string;
   title: string;
   description: string;
-  originalPrice: number;
-  discountedPrice?: number;
+  readPrice: number;
+  readDiscountedPrice?: number;
+  downloadPrice: number;
+  downloadDiscountedPrice?: number;
   thumbnailUrl?: string;
   pdfName?: string;
   file_id?: string;
@@ -32,11 +34,17 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
   const [description, setDescription] = useState(
     editingCourse?.description ?? "",
   );
-  const [originalPrice, setOriginalPrice] = useState(
-    editingCourse?.originalPrice?.toString() ?? "",
+  const [readPrice, setReadPrice] = useState(
+    editingCourse?.readPrice?.toString() ?? "",
   );
-  const [discountedPrice, setDiscountedPrice] = useState(
-    editingCourse?.discountedPrice?.toString() ?? "",
+  const [readDiscountedPrice, setReadDiscountedPrice] = useState(
+    editingCourse?.readDiscountedPrice?.toString() ?? "",
+  );
+  const [downloadPrice, setDownloadPrice] = useState(
+    editingCourse?.downloadPrice?.toString() ?? "",
+  );
+  const [downloadDiscountedPrice, setDownloadDiscountedPrice] = useState(
+    editingCourse?.downloadDiscountedPrice?.toString() ?? "",
   );
   const [thumbnailUrl, setThumbnailUrl] = useState(
     editingCourse?.thumbnailUrl ?? "",
@@ -48,8 +56,10 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
   const [touched, setTouched] = useState({
     title: false,
     description: false,
-    originalPrice: false,
-    discountedPrice: false,
+    readPrice: false,
+    readDiscountedPrice: false,
+    downloadPrice: false,
+    downloadDiscountedPrice: false,
     thumbnailUrl: false,
     fileId: false,
   });
@@ -61,8 +71,14 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
 
   const validation = useMemo(() => {
     const errors: Record<string, string> = {};
-    const priceValue = Number(originalPrice);
-    const discountValue = discountedPrice ? Number(discountedPrice) : undefined;
+    const readPriceValue = Number(readPrice);
+    const readDiscountValue = readDiscountedPrice
+      ? Number(readDiscountedPrice)
+      : undefined;
+    const downloadPriceValue = Number(downloadPrice);
+    const downloadDiscountValue = downloadDiscountedPrice
+      ? Number(downloadDiscountedPrice)
+      : undefined;
 
     // Title: required
     if (!title.trim()) {
@@ -74,22 +90,44 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
       errors.description = "Description is required.";
     }
 
-    // Price: required, only number
-    if (!originalPrice.trim()) {
-      errors.originalPrice = "Price is required.";
-    } else if (!Number.isFinite(priceValue)) {
-      errors.originalPrice = "Price must be a valid number.";
+    // Read price: required
+    if (!readPrice.trim()) {
+      errors.readPrice = "Read price is required.";
+    } else if (!Number.isFinite(readPriceValue)) {
+      errors.readPrice = "Read price must be a valid number.";
     }
 
-    // Discount price: optional, only number, must be less than original price
-    if (discountedPrice.trim()) {
-      if (!Number.isFinite(discountValue)) {
-        errors.discountedPrice = "Discount must be a valid number.";
+    // Read discount: optional, must be less than read price
+    if (readDiscountedPrice.trim()) {
+      if (!Number.isFinite(readDiscountValue)) {
+        errors.readDiscountedPrice = "Read discount must be a valid number.";
       } else if (
-        Number.isFinite(priceValue) &&
-        (discountValue ?? 0) >= priceValue
+        Number.isFinite(readPriceValue) &&
+        (readDiscountValue ?? 0) >= readPriceValue
       ) {
-        errors.discountedPrice = "Discount must be less than the price.";
+        errors.readDiscountedPrice =
+          "Read discount must be less than read price.";
+      }
+    }
+
+    // Download price: required
+    if (!downloadPrice.trim()) {
+      errors.downloadPrice = "Download price is required.";
+    } else if (!Number.isFinite(downloadPriceValue)) {
+      errors.downloadPrice = "Download price must be a valid number.";
+    }
+
+    // Download discount: optional, must be less than download price
+    if (downloadDiscountedPrice.trim()) {
+      if (!Number.isFinite(downloadDiscountValue)) {
+        errors.downloadDiscountedPrice =
+          "Download discount must be a valid number.";
+      } else if (
+        Number.isFinite(downloadPriceValue) &&
+        (downloadDiscountValue ?? 0) >= downloadPriceValue
+      ) {
+        errors.downloadDiscountedPrice =
+          "Download discount must be less than download price.";
       }
     }
 
@@ -102,7 +140,15 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
       errors,
       isValid: Object.keys(errors).length === 0,
     };
-  }, [title, description, originalPrice, discountedPrice, fileId]);
+  }, [
+    title,
+    description,
+    readPrice,
+    readDiscountedPrice,
+    downloadPrice,
+    downloadDiscountedPrice,
+    fileId,
+  ]);
 
   const markTouched = (field: keyof typeof touched) => {
     setTouched((prev) => (prev[field] ? prev : { ...prev, [field]: true }));
@@ -120,14 +166,22 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
       });
       return;
     }
-    const price = Number(originalPrice);
-    const discount = discountedPrice ? Number(discountedPrice) : undefined;
+    const parsedReadPrice = Number(readPrice);
+    const parsedReadDiscount = readDiscountedPrice
+      ? Number(readDiscountedPrice)
+      : undefined;
+    const parsedDownloadPrice = Number(downloadPrice);
+    const parsedDownloadDiscount = downloadDiscountedPrice
+      ? Number(downloadDiscountedPrice)
+      : undefined;
     onSave({
       id: id || toSlug(title),
       title: title.trim(),
       description: description.trim(),
-      originalPrice: price,
-      discountedPrice: discount,
+      readPrice: parsedReadPrice,
+      readDiscountedPrice: parsedReadDiscount,
+      downloadPrice: parsedDownloadPrice,
+      downloadDiscountedPrice: parsedDownloadDiscount,
       thumbnailUrl: thumbnailUrl.trim() || undefined,
       file_id: fileId.trim(),
     });
@@ -176,34 +230,73 @@ const AdminCourseForm = ({ editingCourse, onSave, onCancel }: Props) => {
 
       <div className={styles.grid}>
         <label className={styles.field}>
-          <span className={styles.label}>Price</span>
+          <span className={styles.label}>Read Price</span>
           <Input
             type="number"
             placeholder="1999"
-            value={originalPrice}
-            onChange={(event) => setOriginalPrice(event.target.value)}
-            onBlur={() => markTouched("originalPrice")}
-            status={shouldShowError("originalPrice") ? "error" : undefined}
+            value={readPrice}
+            onChange={(event) => setReadPrice(event.target.value)}
+            onBlur={() => markTouched("readPrice")}
+            status={shouldShowError("readPrice") ? "error" : undefined}
           />
-          {shouldShowError("originalPrice") && (
+          {shouldShowError("readPrice") && (
+            <span className={styles.error}>{validation.errors.readPrice}</span>
+          )}
+        </label>
+        <label className={styles.field}>
+          <span className={styles.label}>Read Discount Price (optional)</span>
+          <Input
+            type="number"
+            placeholder="1499"
+            value={readDiscountedPrice}
+            onChange={(event) => setReadDiscountedPrice(event.target.value)}
+            onBlur={() => markTouched("readDiscountedPrice")}
+            status={
+              shouldShowError("readDiscountedPrice") ? "error" : undefined
+            }
+          />
+          {shouldShowError("readDiscountedPrice") && (
             <span className={styles.error}>
-              {validation.errors.originalPrice}
+              {validation.errors.readDiscountedPrice}
+            </span>
+          )}
+        </label>
+      </div>
+
+      <div className={styles.grid}>
+        <label className={styles.field}>
+          <span className={styles.label}>Download Price</span>
+          <Input
+            type="number"
+            placeholder="2999"
+            value={downloadPrice}
+            onChange={(event) => setDownloadPrice(event.target.value)}
+            onBlur={() => markTouched("downloadPrice")}
+            status={shouldShowError("downloadPrice") ? "error" : undefined}
+          />
+          {shouldShowError("downloadPrice") && (
+            <span className={styles.error}>
+              {validation.errors.downloadPrice}
             </span>
           )}
         </label>
         <label className={styles.field}>
-          <span className={styles.label}>Discount Price (optional)</span>
+          <span className={styles.label}>
+            Download Discount Price (optional)
+          </span>
           <Input
             type="number"
-            placeholder="1499"
-            value={discountedPrice}
-            onChange={(event) => setDiscountedPrice(event.target.value)}
-            onBlur={() => markTouched("discountedPrice")}
-            status={shouldShowError("discountedPrice") ? "error" : undefined}
+            placeholder="2499"
+            value={downloadDiscountedPrice}
+            onChange={(event) => setDownloadDiscountedPrice(event.target.value)}
+            onBlur={() => markTouched("downloadDiscountedPrice")}
+            status={
+              shouldShowError("downloadDiscountedPrice") ? "error" : undefined
+            }
           />
-          {shouldShowError("discountedPrice") && (
+          {shouldShowError("downloadDiscountedPrice") && (
             <span className={styles.error}>
-              {validation.errors.discountedPrice}
+              {validation.errors.downloadDiscountedPrice}
             </span>
           )}
         </label>

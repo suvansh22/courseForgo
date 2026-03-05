@@ -16,7 +16,11 @@ import {
   grantDriveReadAccess,
 } from "@/lib/integrations/googleDrive";
 import { validateCreatePurchase } from "@/lib/validation/purchase";
-import type { PurchaseResponse, PurchasesResponse } from "@/types/purchase";
+import {
+  ACCESS_TYPE,
+  type PurchaseResponse,
+  type PurchasesResponse,
+} from "@/types/purchase";
 import { NextResponse } from "next/server";
 
 const isNonEmptyString = (value: unknown): value is string =>
@@ -73,7 +77,7 @@ export const POST = async (request: Request) => {
 
     const assetId = payload.assetId as string;
 
-    if (created.accessType === "read_only") {
+    if (created.accessType === ACCESS_TYPE.READ_ONLY) {
       if (!isNonEmptyString(assetId)) {
         return validationFailed([
           "folderId is required for read_only purchase when targetType is folder.",
@@ -89,7 +93,7 @@ export const POST = async (request: Request) => {
         {
           purchase: created,
           delivery: {
-            mode: "read_only",
+            mode: ACCESS_TYPE.READ_ONLY,
             targetId: assetId.trim(),
             permissionId: permission.id,
           },
@@ -108,7 +112,7 @@ export const POST = async (request: Request) => {
       {
         purchase: created,
         delivery: {
-          mode: "can_download",
+          mode: ACCESS_TYPE.CAN_DOWNLOAD,
           downloadLink: delivery.downloadLink,
           webViewLink: delivery.webViewLink,
         },

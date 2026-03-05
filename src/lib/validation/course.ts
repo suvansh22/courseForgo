@@ -29,8 +29,14 @@ export const validateCreateCourse = (payload: Record<string, unknown>) => {
   const title = payload.title;
   const description = payload.description;
   const fileId = payload.fileId ?? payload.file_id;
-  const originalPrice = toNumber(payload.originalPrice);
-  const discountedPrice = payload.discountedPrice;
+  const readPrice = toNumber(payload.readPrice ?? payload.read_price);
+  const readDiscountedPrice =
+    payload.readDiscountedPrice ?? payload.read_discounted_price;
+  const downloadPrice = toNumber(
+    payload.downloadPrice ?? payload.download_price,
+  );
+  const downloadDiscountedPrice =
+    payload.downloadDiscountedPrice ?? payload.download_discounted_price;
   const thumbnailUrl = payload.thumbnailUrl;
   const isActive = payload.isActive;
 
@@ -46,23 +52,42 @@ export const validateCreateCourse = (payload: Record<string, unknown>) => {
   if (!isNonEmptyString(fileId)) {
     errors.push("fileId is required.");
   }
-  if (originalPrice === null || originalPrice <= 0) {
-    errors.push("originalPrice must be a positive number.");
+  if (readPrice === null || readPrice <= 0) {
+    errors.push("readPrice must be a positive number.");
+  }
+  if (downloadPrice === null || downloadPrice <= 0) {
+    errors.push("downloadPrice must be a positive number.");
   }
 
-  let discountValue: number | undefined;
-  if (discountedPrice !== undefined) {
-    const parsedDiscount = toNumber(discountedPrice);
+  let readDiscountValue: number | undefined;
+  if (readDiscountedPrice !== undefined) {
+    const parsedDiscount = toNumber(readDiscountedPrice);
     if (parsedDiscount === null || parsedDiscount < 0) {
-      errors.push("discountedPrice must be a non-negative number.");
+      errors.push("readDiscountedPrice must be a non-negative number.");
     } else {
-      discountValue = parsedDiscount;
+      readDiscountValue = parsedDiscount;
     }
   }
 
-  if (originalPrice !== null && discountValue !== undefined) {
-    if (discountValue >= originalPrice) {
-      errors.push("discountedPrice must be less than originalPrice.");
+  let downloadDiscountValue: number | undefined;
+  if (downloadDiscountedPrice !== undefined) {
+    const parsedDiscount = toNumber(downloadDiscountedPrice);
+    if (parsedDiscount === null || parsedDiscount < 0) {
+      errors.push("downloadDiscountedPrice must be a non-negative number.");
+    } else {
+      downloadDiscountValue = parsedDiscount;
+    }
+  }
+
+  if (readPrice !== null && readDiscountValue !== undefined) {
+    if (readDiscountValue >= readPrice) {
+      errors.push("readDiscountedPrice must be less than readPrice.");
+    }
+  }
+
+  if (downloadPrice !== null && downloadDiscountValue !== undefined) {
+    if (downloadDiscountValue >= downloadPrice) {
+      errors.push("downloadDiscountedPrice must be less than downloadPrice.");
     }
   }
 
@@ -82,8 +107,10 @@ export const validateCreateCourse = (payload: Record<string, unknown>) => {
     id: (id as string).trim(),
     title: (title as string).trim(),
     description: (description as string).trim(),
-    originalPrice: originalPrice ?? 0,
-    discountedPrice: discountValue,
+    readPrice: readPrice ?? 0,
+    readDiscountedPrice: readDiscountValue,
+    downloadPrice: downloadPrice ?? 0,
+    downloadDiscountedPrice: downloadDiscountValue,
     thumbnailUrl: isNonEmptyString(thumbnailUrl)
       ? (thumbnailUrl as string).trim()
       : undefined,
@@ -120,21 +147,47 @@ export const validateUpdateCourse = (payload: Record<string, unknown>) => {
     }
   }
 
-  if (payload.originalPrice !== undefined) {
-    const parsed = toNumber(payload.originalPrice);
+  const readPrice = payload.readPrice;
+  if (readPrice !== undefined) {
+    const parsed = toNumber(readPrice);
     if (parsed === null || parsed <= 0) {
-      errors.push("originalPrice must be a positive number when provided.");
+      errors.push("read price must be a positive number when provided.");
     } else {
-      update.originalPrice = parsed;
+      update.readPrice = parsed;
     }
   }
 
-  if (payload.discountedPrice !== undefined) {
-    const parsed = toNumber(payload.discountedPrice);
+  const readDiscountPrice = payload.discountedPrice;
+  if (readDiscountPrice !== undefined) {
+    const parsed = toNumber(readDiscountPrice);
     if (parsed === null || parsed < 0) {
-      errors.push("discountedPrice must be a non-negative number when provided.");
+      errors.push(
+        "read Discounted Price must be a non-negative number when provided.",
+      );
     } else {
-      update.discountedPrice = parsed;
+      update.readDiscountedPrice = parsed;
+    }
+  }
+
+  const downloadPrice = payload.downloadPrice;
+  if (downloadPrice !== undefined) {
+    const parsed = toNumber(downloadPrice);
+    if (parsed === null || parsed <= 0) {
+      errors.push("download Price must be a positive number when provided.");
+    } else {
+      update.downloadPrice = parsed;
+    }
+  }
+
+  const downloadDiscountPrice = payload.downloadDiscountedPrice;
+  if (downloadDiscountPrice !== undefined) {
+    const parsed = toNumber(downloadDiscountPrice);
+    if (parsed === null || parsed < 0) {
+      errors.push(
+        "download Discounted Price must be a non-negative number when provided.",
+      );
+    } else {
+      update.downloadDiscountedPrice = parsed;
     }
   }
 
@@ -168,10 +221,26 @@ export const validateUpdateCourse = (payload: Record<string, unknown>) => {
     return { errors };
   }
 
-  if (update.originalPrice !== undefined && update.discountedPrice !== undefined) {
-    if (Number(update.discountedPrice) >= Number(update.originalPrice)) {
+  if (
+    update.readPrice !== undefined &&
+    update.readDiscountedPrice !== undefined
+  ) {
+    if (Number(update.readDiscountedPrice) >= Number(update.readPrice)) {
       return {
-        errors: ["discountedPrice must be less than originalPrice."],
+        errors: ["readDiscountedPrice must be less than readPrice."],
+      };
+    }
+  }
+
+  if (
+    update.downloadPrice !== undefined &&
+    update.downloadDiscountedPrice !== undefined
+  ) {
+    if (
+      Number(update.downloadDiscountedPrice) >= Number(update.downloadPrice)
+    ) {
+      return {
+        errors: ["downloadDiscountedPrice must be less than downloadPrice."],
       };
     }
   }

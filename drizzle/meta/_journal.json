@@ -15,6 +15,13 @@
       "when": 1772098007006,
       "tag": "0001_mature_bromley",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1772561916927,
+      "tag": "0002_dashing_switch",
+      "breakpoints": true
     }
   ]
 }

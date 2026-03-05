@@ -1,20 +1,62 @@
 "use client";
 
+import { DownloadOutlined } from "@ant-design/icons";
+import EyeOutlined from "@ant-design/icons/EyeOutlined";
 import Button from "antd/es/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FC, MouseEvent } from "react";
-import CartButton from "./CartButton";
 import styles from "./index.module.css";
 import type { Props } from "./types";
+
+const PriceContainer = ({
+  originalPrice,
+  discountedPrice,
+  title,
+}: {
+  originalPrice: number;
+  discountedPrice?: number;
+  title: string;
+}) => {
+  const renderPrice = (price: number) => (
+    <>
+      {"\u20B9"}
+      {price}
+    </>
+  );
+  return (
+    <div className={styles.priceContainer}>
+      <span className={styles.smallTitle}>{title}</span>
+      <div className={styles.priceWrapper}>
+        <span
+          className={`relative ${discountedPrice ? "text-sm text-gray-500" : styles.disctountedPriceWrapper}`}
+        >
+          {renderPrice(originalPrice)}
+          {discountedPrice ? (
+            <span
+              className={`${styles.disctountedPriceAnimation} ${styles.animateStrike}`}
+            />
+          ) : null}
+        </span>
+        {discountedPrice ? (
+          <span className={styles.disctountedPriceWrapper}>
+            {renderPrice(discountedPrice)}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+};
 
 const CourseCard: FC<Props> = (props) => {
   const router = useRouter();
   const {
     id,
     description,
-    discountedPrice,
-    originalPrice,
+    readPrice,
+    readDiscountedPrice,
+    downloadPrice,
+    downloadDiscountedPrice,
     thumbnailUrl,
     title,
     variant = "public",
@@ -34,13 +76,6 @@ const CourseCard: FC<Props> = (props) => {
       handler();
     };
 
-  const renderPrice = (price: number) => (
-    <>
-      {"\u20B9"}
-      {price}
-    </>
-  );
-
   const handleNavigate = () => {
     if (props.onNavigate) {
       props.onNavigate(id);
@@ -55,8 +90,13 @@ const CourseCard: FC<Props> = (props) => {
       role="link"
       tabIndex={0}
       aria-label={`View course ${title}`}
+      onClick={handleNavigate}
     >
       <div className={styles.imageContainer}>
+        <div className={styles.viewButton}>
+          <Button icon={<EyeOutlined />} />
+          <Button icon={<DownloadOutlined />} />
+        </div>
         <Image
           src={thumbnailSrc}
           alt="Course thumbnail"
@@ -73,23 +113,21 @@ const CourseCard: FC<Props> = (props) => {
           {truncatedDescription}
         </p>
 
-        <div className={styles.priceContainer}>
-          <div className={styles.priceWrapper}>
-            <span className="relative text-sm text-gray-500">
-              {renderPrice(originalPrice)}
-              {discountedPrice ? (
-                <span
-                  className={`${styles.disctountedPriceAnimation} ${styles.animateStrike}`}
-                />
-              ) : null}
-            </span>
-            {discountedPrice ? (
-              <span className={styles.disctountedPriceWrapper}>
-                {renderPrice(discountedPrice)}
-              </span>
-            ) : null}
-          </div>
-
+        <div>
+          {variant === "public" ? (
+            <div className={styles.pricesWrapper}>
+              <PriceContainer
+                originalPrice={readPrice}
+                discountedPrice={readDiscountedPrice}
+                title="Read only"
+              />
+              <PriceContainer
+                originalPrice={downloadPrice}
+                discountedPrice={downloadDiscountedPrice}
+                title="Download"
+              />
+            </div>
+          ) : null}
           <div className={styles.cardActions}>
             {variant === "admin" ? (
               <>
@@ -100,23 +138,7 @@ const CourseCard: FC<Props> = (props) => {
                   Remove
                 </Button>
               </>
-            ) : (
-              <>
-                <CartButton
-                  id={id}
-                  originalPrice={originalPrice}
-                  title={title}
-                  discountedPrice={discountedPrice}
-                  thumbnailUrl={thumbnailUrl}
-                />
-                <Button
-                  type="primary"
-                  onClick={withStopPropagation(handleNavigate)}
-                >
-                  View Course
-                </Button>
-              </>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

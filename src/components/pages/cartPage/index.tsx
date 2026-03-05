@@ -1,8 +1,8 @@
 "use client";
 
-import Button from "antd/es/button";
 import CartCard from "@/components/UI/cartCard";
 import { useCart } from "@/components/providers/cartProvider";
+import Button from "antd/es/button";
 import styles from "./index.module.css";
 
 const CartPage = () => {
@@ -25,14 +25,15 @@ const CartPage = () => {
             </div>
           ) : (
             items.map((item) => (
-                <CartCard
-                  key={item.id}
-                  title={item.title}
-                  thumbnailUrl={item.thumbnailUrl}
-                  originalPrice={item.originalPrice}
-                  discountedPrice={item.discountedPrice}
-                  onRemove={() => removeItem(item.id)}
-                />
+              <CartCard
+                key={`${item.id}-${item.accessType}`}
+                title={item.title}
+                thumbnailUrl={item.thumbnailUrl}
+                originalPrice={item.originalPrice}
+                discountedPrice={item.discountedPrice}
+                onRemove={() => removeItem(item.id)}
+                accessType={item.accessType}
+              />
             ))
           )}
         </section>

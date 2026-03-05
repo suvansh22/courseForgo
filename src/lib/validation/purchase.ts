@@ -1,4 +1,4 @@
-import type { Purchase } from "@/types/purchase";
+import type { ACCESS_TYPE, Purchase } from "@/types/purchase";
 
 const isNonEmptyString = (value: unknown) =>
   typeof value === "string" && value.trim().length > 0;
@@ -31,7 +31,7 @@ export const validateCreatePurchase = (payload: Record<string, unknown>) => {
     id: (id as string).trim(),
     userId: (userId as string).trim(),
     courseId: (courseId as string).trim(),
-    accessType: accessType as "read_only" | "can_download",
+    accessType: accessType as ACCESS_TYPE,
     purchasedAt: new Date().toISOString(),
   };
 

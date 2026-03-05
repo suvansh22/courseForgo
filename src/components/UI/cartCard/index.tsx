@@ -1,3 +1,5 @@
+import { formatSnakeCase } from "@/lib/formatSnakeCase";
+import { ACCESS_TYPE } from "@/types/purchase";
 import { DeleteOutlined } from "@ant-design/icons";
 import Button from "antd/es/button";
 import Image from "next/image";
@@ -9,6 +11,7 @@ type Props = {
   originalPrice: number;
   discountedPrice?: number;
   onRemove: () => void;
+  accessType: ACCESS_TYPE;
 };
 
 const CartCard = ({
@@ -17,6 +20,7 @@ const CartCard = ({
   originalPrice,
   discountedPrice,
   onRemove,
+  accessType,
 }: Props) => {
   const price = discountedPrice ?? originalPrice;
 
@@ -33,7 +37,9 @@ const CartCard = ({
 
       <div className={styles.details}>
         <div className={styles.headerRow}>
-          <h3 className={styles.title}>{title}</h3>
+          <h3 className={styles.title}>
+            {title} ({formatSnakeCase(accessType)})
+          </h3>
           <div className={styles.metaRow}>
             <span className={styles.price}>
               {"\u20B9"}

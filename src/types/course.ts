@@ -1,9 +1,13 @@
+import type { ACCESS_TYPE } from "@/types/purchase";
+
 export type Course = {
   id: string;
   title: string;
   description: string;
-  originalPrice: number;
-  discountedPrice?: number;
+  readPrice: number;
+  readDiscountedPrice?: number;
+  downloadPrice: number;
+  downloadDiscountedPrice?: number;
   thumbnailUrl?: string;
   fileId: string;
   isActive: boolean;
@@ -23,4 +27,22 @@ export type CoursesResponse = {
 
 export type CourseResponse = {
   course: Course;
+};
+
+export type CoursePurchaseInfo = {
+  hasPurchased: boolean;
+  accessType?: ACCESS_TYPE;
+  purchasedAt?: string;
+};
+
+export type CourseWithPurchaseInfo = Course & {
+  purchaseInfo: CoursePurchaseInfo;
+};
+
+export type CoursesWithPurchaseInfoResponse = {
+  courses: CourseWithPurchaseInfo[];
+};
+
+export type CourseWithPurchaseInfoResponse = {
+  course: CourseWithPurchaseInfo;
 };
