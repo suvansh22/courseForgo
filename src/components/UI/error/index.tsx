@@ -27,13 +27,16 @@ const Error = ({
   };
 
   return (
-    <div className={styles.errorContainer}>
-      <ExclamationCircleOutlined className={styles.errorIcon} />
+    <section className={styles.errorContainer} role="alert" aria-live="polite">
+      <div className={styles.iconShell}>
+        <ExclamationCircleOutlined className={styles.errorIcon} />
+      </div>
+      <h2 className={styles.errorTitle}>Something went wrong</h2>
       <p className={styles.errorMessage}>{message}</p>
+
       {onRetry && (
         <Button
           type="primary"
-          danger
           loading={isRetrying}
           onClick={handleRetry}
           className={styles.retryButton}
@@ -41,7 +44,7 @@ const Error = ({
           {retryButtonText}
         </Button>
       )}
-    </div>
+    </section>
   );
 };
 

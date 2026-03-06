@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS purchases (
   user_id TEXT NOT NULL,
   course_id TEXT NOT NULL,
   access_type TEXT NOT NULL DEFAULT 'read_only',
+  link TEXT,
   purchased_at TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT,
@@ -36,3 +37,4 @@ CREATE INDEX IF NOT EXISTS idx_courses_active ON courses(is_active);
 CREATE INDEX IF NOT EXISTS idx_courses_file_id ON courses(file_id);
 CREATE INDEX IF NOT EXISTS idx_purchases_user_id ON purchases(user_id);
 CREATE INDEX IF NOT EXISTS idx_purchases_course_id ON purchases(course_id);
+

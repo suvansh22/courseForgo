@@ -1,7 +1,13 @@
 import { fetchJson } from "@/lib/http/client";
-import type { CourseResponse, CoursesResponse } from "@/types/course";
+import type {
+  CoursesWithPurchaseInfoResponse,
+  CourseWithPurchaseInfoResponse,
+} from "@/types/course";
 
-export const getCourses = () => fetchJson<CoursesResponse>("/api/courses");
+export const getCourses = () =>
+  fetchJson<CoursesWithPurchaseInfoResponse>("/api/courses?isAdmin=false");
 
 export const getCourseById = (courseId: string) =>
-  fetchJson<CourseResponse>(`/api/courses/${courseId}`);
+  fetchJson<CourseWithPurchaseInfoResponse>(
+    `/api/courses/${courseId}?isAdmin=false`,
+  );

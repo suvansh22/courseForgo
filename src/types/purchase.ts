@@ -3,6 +3,7 @@ export type Purchase = {
   userId: string;
   courseId: string;
   accessType: ACCESS_TYPE;
+  link?: string;
   purchasedAt: string;
 };
 

@@ -40,6 +40,7 @@ export const GET = async (request: Request) => {
             hasPurchased: Boolean(purchase),
             accessType: purchase?.accessType,
             purchasedAt: purchase?.purchasedAt,
+            link: purchase?.link,
           },
         };
       });

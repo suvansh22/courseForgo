@@ -33,6 +33,7 @@ export type CoursePurchaseInfo = {
   hasPurchased: boolean;
   accessType?: ACCESS_TYPE;
   purchasedAt?: string;
+  link?: string;
 };
 
 export type CourseWithPurchaseInfo = Course & {

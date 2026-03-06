@@ -22,6 +22,13 @@
       "when": 1772561916927,
       "tag": "0002_dashing_switch",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1772777141922,
+      "tag": "0003_silky_triathlon",
+      "breakpoints": true
     }
   ]
 }

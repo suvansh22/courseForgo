@@ -1,4 +1,9 @@
 @reference "tailwindcss";
+
 .mainContainer {
-  @apply mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8  grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 sm:justify-items-stretch lg:grid-cols-3;
+  @apply mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8;
+}
+
+.gridContainer {
+  @apply grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 sm:justify-items-stretch lg:grid-cols-3;
 }

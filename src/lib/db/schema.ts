@@ -52,6 +52,7 @@ export const purchases = sqliteTable(
     })
       .notNull()
       .default("read_only"),
+    link: text("link"),
     purchasedAt: text("purchased_at").notNull(),
   },
   (table) => ({

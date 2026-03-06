@@ -1,7 +1,7 @@
 "use client";
 
-import { courseCardsMock } from "@/components/mockData";
 import CourseCard from "@/components/UI/courseCard";
+import Error from "@/components/UI/error";
 import LoadingOverlay from "@/components/UI/loadingOverlay";
 import { getCourses } from "@/lib/api/courses";
 import { useQuery } from "@tanstack/react-query";
@@ -25,16 +25,15 @@ const HomePage: FC = () => {
   if (isError) {
     return (
       <div className={styles.mainContainer}>
-        Failed to load courses. Please try again.
+        <Error message="Failed to load courses. Please try again." />
       </div>
     );
   }
 
-  // const courses = data?.courses ?? [];
-  const courses = courseCardsMock;
+  const courses = data?.courses ?? [];
 
   return (
-    <div className={styles.mainContainer}>
+    <div className={`${styles.mainContainer} ${styles.gridContainer}`}>
       {courses.map((course) => (
         <CourseCard key={course.id} {...course} />
       ))}

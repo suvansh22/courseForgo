@@ -13,6 +13,7 @@ const toPurchase = (row: PurchaseRow): Purchase => ({
     row.accessType === ACCESS_TYPE.CAN_DOWNLOAD
       ? ACCESS_TYPE.CAN_DOWNLOAD
       : ACCESS_TYPE.READ_ONLY,
+  link: row.link ?? undefined,
   purchasedAt: row.purchasedAt,
 });
 
@@ -74,6 +75,7 @@ export const createPurchase = async (
     userId: input.userId,
     courseId: input.courseId,
     accessType: input.accessType,
+    link: input.link ?? null,
     purchasedAt: input.purchasedAt,
   });
 

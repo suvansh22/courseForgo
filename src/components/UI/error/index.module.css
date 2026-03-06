@@ -1,15 +1,26 @@
+@reference "tailwindcss";
+
 .errorContainer {
-  @apply flex flex-col items-center justify-center gap-6 rounded-lg border border-red-300 bg-red-50 p-8 dark:border-red-800 dark:bg-red-900/20;
+  @apply mx-auto flex w-full h-full max-w-7xl flex-col px-4 py-10 sm:px-6 lg:px-8 justify-center items-center;
+  @apply rounded-2xl border border-red-200 bg-linear-to-b from-red-50 to-white shadow-sm;
+}
+
+.iconShell {
+  @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 sm:h-12 sm:w-12;
 }
 
 .errorIcon {
-  @apply text-5xl text-red-500;
+  @apply text-xl text-red-600 sm:text-2xl;
+}
+
+.errorTitle {
+  @apply text-base font-semibold text-red-900 sm:text-lg;
 }
 
 .errorMessage {
-  @apply text-center text-lg text-red-700 dark:text-red-300;
+  @apply mt-1 text-sm leading-6 text-red-700 sm:text-base;
 }
 
 .retryButton {
-  @apply px-6 py-2;
+  @apply mt-2 h-10 rounded-lg px-5 w-[300px];
 }

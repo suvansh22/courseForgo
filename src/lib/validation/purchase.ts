@@ -1,6 +1,6 @@
 import type { ACCESS_TYPE, Purchase } from "@/types/purchase";
 
-const isNonEmptyString = (value: unknown) =>
+const isNonEmptyString = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;
 
 export const validateCreatePurchase = (payload: Record<string, unknown>) => {
@@ -9,6 +9,7 @@ export const validateCreatePurchase = (payload: Record<string, unknown>) => {
   const userId = payload.userId;
   const courseId = payload.courseId;
   const accessType = payload.accessType;
+  const link = payload.link;
 
   if (!isNonEmptyString(id)) {
     errors.push("id is required.");
@@ -22,6 +23,9 @@ export const validateCreatePurchase = (payload: Record<string, unknown>) => {
   if (accessType !== "read_only" && accessType !== "can_download") {
     errors.push("accessType must be either read_only or can_download.");
   }
+  if (link !== undefined && !isNonEmptyString(link)) {
+    errors.push("link, when provided, must be a non-empty string.");
+  }
 
   if (errors.length > 0) {
     return { errors };
@@ -32,6 +36,7 @@ export const validateCreatePurchase = (payload: Record<string, unknown>) => {
     userId: (userId as string).trim(),
     courseId: (courseId as string).trim(),
     accessType: accessType as ACCESS_TYPE,
+    link: isNonEmptyString(link) ? link.trim() : undefined,
     purchasedAt: new Date().toISOString(),
   };
 

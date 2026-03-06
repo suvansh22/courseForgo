@@ -1,5 +1,6 @@
 "use client";
 
+import { ACCESS_TYPE } from "@/types/purchase";
 import { DownloadOutlined } from "@ant-design/icons";
 import EyeOutlined from "@ant-design/icons/EyeOutlined";
 import Button from "antd/es/button";
@@ -59,6 +60,7 @@ const CourseCard: FC<Props> = (props) => {
     downloadDiscountedPrice,
     thumbnailUrl,
     title,
+    purchaseInfo,
     variant = "public",
     onEdit = () => {},
     onDelete = () => {},
@@ -94,8 +96,18 @@ const CourseCard: FC<Props> = (props) => {
     >
       <div className={styles.imageContainer}>
         <div className={styles.viewButton}>
-          <Button icon={<EyeOutlined />} />
-          <Button icon={<DownloadOutlined />} />
+          {variant === "public" &&
+          purchaseInfo?.accessType &&
+          purchaseInfo?.link ? (
+            <>
+              {purchaseInfo.accessType === ACCESS_TYPE.READ_ONLY ? (
+                <Button icon={<EyeOutlined />} />
+              ) : null}
+              {purchaseInfo.accessType === ACCESS_TYPE.CAN_DOWNLOAD ? (
+                <Button icon={<DownloadOutlined />} />
+              ) : null}
+            </>
+          ) : null}
         </div>
         <Image
           src={thumbnailSrc}
