@@ -63,3 +63,20 @@ export const purchases = sqliteTable(
     purchasesCourseIdx: index("idx_purchases_course_id").on(table.courseId),
   }),
 );
+
+export const testimonials = sqliteTable(
+  "testimonials",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    feedback: text("feedback").notNull(),
+    isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => ({
+    testimonialsActiveIdx: index("idx_testimonials_active").on(table.isActive),
+    testimonialsSortIdx: index("idx_testimonials_sort_order").on(table.sortOrder),
+  }),
+);

@@ -1,9 +1,18 @@
+"use client";
+
 import TestimonialCarousel from "@/components/UI/testimonialCarousel";
-import { mockTestimonials } from "@/components/mockData";
 import { quickLinks } from "@/components/pages/home/constants";
+import { getTestimonials } from "@/lib/api/testimonials";
+import { useQuery } from "@tanstack/react-query";
+import Spin from "antd/es/spin";
 import styles from "./index.module.css";
 
 const Footer = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["testimonials"],
+    queryFn: getTestimonials,
+  });
+
   return (
     <footer className={styles.footerContainer}>
       <div className={styles.footerWrapper}>
@@ -22,9 +31,15 @@ const Footer = () => {
           </div>
           <div className={styles.testimonialsContainer}>
             <h4 className={styles.headingWrapper}>What Our Learners Say</h4>
-            <div>
-              <TestimonialCarousel testimonials={mockTestimonials} />
-            </div>
+            {isLoading ? (
+              <div>
+                <Spin />
+              </div>
+            ) : data?.testimonials && data.testimonials.length > 0 ? (
+              <div>
+                <TestimonialCarousel testimonials={data.testimonials} />
+              </div>
+            ) : null}
           </div>
         </div>
         <div className={styles.allRightsReservedContainer}>

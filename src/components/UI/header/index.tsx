@@ -31,6 +31,10 @@ const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
     router.push("/admin/create");
   };
 
+  const openTestimonials = () => {
+    router.push("/admin/testimonials");
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.headerWrapper}>
@@ -51,9 +55,14 @@ const Header = ({ isAdminApp = false }: { isAdminApp?: boolean }) => {
             <>
               {isAdminApp ? null : <CartButton />}
               {isAdminApp ? (
-                <Button onClick={createNewCourse} type="primary" size="large">
-                  New Course
-                </Button>
+                <>
+                  <Button onClick={openTestimonials} size="large">
+                    Testimonials
+                  </Button>
+                  <Button onClick={createNewCourse} type="primary" size="large">
+                    New Course
+                  </Button>
+                </>
               ) : null}
               <Button
                 type="primary"

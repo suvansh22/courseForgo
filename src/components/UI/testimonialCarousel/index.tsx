@@ -1,19 +1,20 @@
 import Carousel from "antd/es/carousel";
 import { FC } from "react";
+import type { Testimonial } from "@/types/testimonial";
 import styles from "./index.module.css";
 
 type Props = {
-  testimonials: Array<{ name: string; feedback: string }>;
+  testimonials: Testimonial[];
 };
 
 const TestimonialCarousel: FC<Props> = ({ testimonials }) => {
   return (
     <Carousel autoplay dots className="w-full">
-      {testimonials.map((testimonial, index) => (
-        <div key={index} className="px-1">
-          <blockquote className={styles.feedbackWrapper}>
-            <p className={styles.feedbackWrapper}>{testimonial.feedback}</p>
-            <footer className={styles.nameWrapper}>— {testimonial.name}</footer>
+      {testimonials.map((testimonial) => (
+        <div key={testimonial.id} className="px-1">
+          <blockquote className={styles.card}>
+            <p className={styles.feedback}>{testimonial.feedback}</p>
+            <footer className={styles.name}>- {testimonial.name}</footer>
           </blockquote>
         </div>
       ))}

@@ -33,8 +33,20 @@ CREATE TABLE IF NOT EXISTS purchases (
   UNIQUE (user_id, course_id)
 );
 
+CREATE TABLE IF NOT EXISTS testimonials (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  feedback TEXT NOT NULL,
+  is_active INTEGER NOT NULL DEFAULT 1,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_courses_active ON courses(is_active);
 CREATE INDEX IF NOT EXISTS idx_courses_file_id ON courses(file_id);
 CREATE INDEX IF NOT EXISTS idx_purchases_user_id ON purchases(user_id);
 CREATE INDEX IF NOT EXISTS idx_purchases_course_id ON purchases(course_id);
+CREATE INDEX IF NOT EXISTS idx_testimonials_active ON testimonials(is_active);
+CREATE INDEX IF NOT EXISTS idx_testimonials_sort_order ON testimonials(sort_order);
 
