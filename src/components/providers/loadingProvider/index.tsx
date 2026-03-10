@@ -1,61 +1,47 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import type { ReactNode } from "react";
 import LoadingOverlay from "@/components/UI/loadingOverlay";
+import type { ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 type LoadingContextValue = {
   isLoading: boolean;
   showLoading: () => void;
   hideLoading: () => void;
-  setLoading: (value: boolean) => void;
-  runWithLoading: <T>(fn: () => Promise<T> | T) => Promise<T>;
 };
 
 const LoadingContext = createContext<LoadingContextValue | null>(null);
 
 export const LoadingProvider = ({ children }: { children: ReactNode }) => {
-  const [activeCount, setActiveCount] = useState(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const showLoading = useCallback(() => {
-    setActiveCount((count) => count + 1);
+    setIsLoading(true);
   }, []);
 
   const hideLoading = useCallback(() => {
-    setActiveCount((count) => Math.max(0, count - 1));
+    setIsLoading(false);
   }, []);
-
-  const setLoading = useCallback((value: boolean) => {
-    setActiveCount(value ? 1 : 0);
-  }, []);
-
-  const runWithLoading = useCallback(
-    async <T,>(fn: () => Promise<T> | T) => {
-      showLoading();
-      try {
-        return await fn();
-      } finally {
-        hideLoading();
-      }
-    },
-    [showLoading, hideLoading],
-  );
 
   const value = useMemo(
     () => ({
-      isLoading: activeCount > 0,
+      isLoading,
       showLoading,
       hideLoading,
-      setLoading,
-      runWithLoading,
     }),
-    [activeCount, showLoading, hideLoading, setLoading, runWithLoading],
+    [isLoading, showLoading, hideLoading],
   );
 
   return (
     <LoadingContext.Provider value={value}>
       {children}
-      <LoadingOverlay isVisible={activeCount > 0} />
+      <LoadingOverlay isVisible={isLoading} />
     </LoadingContext.Provider>
   );
 };

@@ -1,12 +1,24 @@
 "use client";
 
 import CartCard from "@/components/UI/cartCard";
+import usePayment from "@/components/hooks/usePayment";
 import { useCart } from "@/components/providers/cartProvider";
 import Button from "antd/es/button";
+import { useSession } from "next-auth/react";
 import styles from "./index.module.css";
 
 const CartPage = () => {
   const { items, total, removeItem } = useCart();
+  const { data } = useSession();
+  const { processPayment } = usePayment();
+  const buyNow = () => {
+    processPayment({
+      amount: total.toString(),
+      currency: "INR",
+      name: data?.user?.name as string,
+      email: data?.user?.email as string,
+    });
+  };
 
   return (
     <div className={styles.page}>
@@ -59,7 +71,12 @@ const CartPage = () => {
                 {total}
               </span>
             </div>
-            <Button type="primary" block disabled={items.length === 0}>
+            <Button
+              onClick={buyNow}
+              type="primary"
+              block
+              disabled={items.length === 0}
+            >
               Buy Now
             </Button>
           </div>
